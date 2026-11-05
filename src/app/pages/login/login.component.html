@@ -1,0 +1,215 @@
+<main class="grid min-h-screen lg:grid-cols-[42%_58%] bg-[#080c13] text-white antialiased overflow-x-hidden selection:bg-red-600 selection:text-white">
+  <!-- Columna Izquierda: Identidad Total Ground y Contexto de la Bitácora -->
+  <section class="relative hidden overflow-hidden border-r border-white/10 bg-[#090e16] lg:flex lg:flex-col lg:justify-between lg:px-[clamp(3rem,6vw,6.5rem)] lg:py-16">
+    <!-- Fondos decorativos y acentos con iluminación roja corporativa -->
+    <div class="absolute inset-0 opacity-70 pointer-events-none" aria-hidden="true">
+      <div class="absolute -right-24 -top-16 h-[34rem] w-[34rem] rounded-full border border-red-500/20 [transform:rotate(32deg)]"></div>
+      <div class="absolute -bottom-32 left-1/3 h-[40rem] w-[28rem] -skew-x-12 bg-gradient-to-tr from-red-950/40 via-slate-900/20 to-transparent"></div>
+    </div>
+
+    <!-- Bloque Superior de Marca -->
+    <div class="relative z-10 pt-4">
+      <div class="flex items-center gap-5">
+        <img src="/02-TG-Logo.png" alt="Total Ground" class="h-24 w-28 object-contain drop-shadow-[0_4px_20px_rgba(227,6,19,0.3)]" />
+        <div>
+          <p class="text-4xl font-light tracking-tight text-white">TOTAL</p>
+          <p class="text-4xl font-light tracking-tight text-white">GROUND</p>
+          <p class="mt-2 text-base font-semibold tracking-[.32em] text-red-500">BITÁCORA OPERATIVA</p>
+        </div>
+      </div>
+
+      <div class="mt-10 h-0.5 w-16 bg-red-600"></div>
+
+      <h1 class="mt-10 max-w-md text-3xl font-bold leading-tight xl:text-4xl text-white">
+        Registro centralizado, <span class="text-red-500 font-extrabold">trazabilidad</span> y control total.
+      </h1>
+
+      <p class="mt-6 max-w-md text-base leading-7 text-slate-400">
+        Gestiona y documenta actividades, incidencias y avances operativos con la máxima seguridad, auditoría e integridad de datos.
+      </p>
+    </div>
+
+    <!-- Bloque Inferior con Badges de Confianza -->
+    <div class="relative z-10 max-w-lg mt-8">
+      <div class="grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60 backdrop-blur-md shadow-xl">
+        <div class="px-3 py-4 text-center">
+          <p class="text-2xl text-red-500 font-bold">◈</p>
+          <p class="mt-1 text-sm font-semibold text-white">Cifrado JWT</p>
+          <p class="mt-0.5 text-[11px] leading-4 text-slate-400">Tokens seguros</p>
+        </div>
+        <div class="border-x border-white/10 px-3 py-4 text-center">
+          <p class="text-2xl text-red-500 font-bold">❖</p>
+          <p class="mt-1 text-sm font-semibold text-white">Auditoría</p>
+          <p class="mt-0.5 text-[11px] leading-4 text-slate-400">Rastreo de eventos</p>
+        </div>
+        <div class="px-3 py-4 text-center">
+          <p class="text-2xl text-red-500 font-bold">◈</p>
+          <p class="mt-1 text-sm font-semibold text-white">Eficiencia</p>
+          <p class="mt-0.5 text-[11px] leading-4 text-slate-400">Respuestas rápidas</p>
+        </div>
+      </div>
+
+      <p class="mt-5 text-center text-xs tracking-wider text-slate-500 font-mono">
+        PROTECCIÓN SSL/TLS 256-BIT &middot; BACKEND REFORZADO
+      </p>
+    </div>
+  </section>
+
+  <!-- Columna Derecha: Tarjeta de Acceso Corporativo -->
+  <section class="relative flex min-h-screen items-center justify-center px-5 py-10 sm:px-10 lg:px-[clamp(3rem,7vw,7rem)]">
+    <!-- Glow ambiental rojo característico de Total Ground -->
+    <div class="absolute right-0 top-0 h-[36rem] w-[36rem] rounded-full bg-red-700/15 blur-[120px] pointer-events-none" aria-hidden="true"></div>
+
+    <div class="relative z-10 w-full max-w-xl">
+      <!-- Tarjeta Principal de Login -->
+      <div class="rounded-[26px] border border-slate-700/80 bg-[#111722]/95 p-7 sm:p-12 shadow-[0_0_60px_rgba(227,6,19,.22)] backdrop-blur-xl">
+        
+        <!-- Encabezado del Formulario -->
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-500/10 px-3 py-1.5 rounded-full border border-red-500/20">
+            Acceso corporativo
+          </p>
+          <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Sistema activo
+          </span>
+        </div>
+
+        <h2 class="mt-6 text-3xl font-extrabold tracking-tight sm:text-4xl text-white">Bienvenido</h2>
+        <p class="mt-2 text-base text-slate-400">Inicia sesión con tus credenciales de la bitácora.</p>
+
+        <!-- Mensaje de Error si las credenciales fallan -->
+        @if (errorMessage()) {
+          <div class="mt-6 rounded-xl border border-red-500/50 bg-red-950/40 p-4 text-sm text-red-200 flex items-start gap-3 animate-fade-in" role="alert">
+            <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div>
+              <p class="font-bold text-red-300">No fue posible ingresar</p>
+              <p class="text-xs mt-0.5 text-slate-300">{{ errorMessage() }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- Formulario de Autenticación -->
+        <form (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+          <!-- Campo Correo -->
+          <div>
+            <label for="correo" class="block text-sm font-semibold text-slate-200">
+              Correo corporativo <span class="text-red-500">*</span>
+            </label>
+            <div class="relative mt-2">
+              <input
+                id="correo"
+                name="correo"
+                type="email"
+                [(ngModel)]="correo"
+                required
+                autocomplete="email"
+                placeholder="usuario@totalground.com"
+                class="min-h-14 w-full rounded-xl border border-slate-700/80 bg-slate-950/60 px-4 text-base text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+              />
+            </div>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div>
+            <label for="contrasena" class="block text-sm font-semibold text-slate-200">
+              Contraseña <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-2 flex min-h-14 rounded-xl border border-slate-700/80 bg-slate-950/60 transition focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20">
+              <input
+                id="contrasena"
+                name="contrasena"
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="contrasena"
+                required
+                autocomplete="current-password"
+                placeholder="••••••••"
+                class="min-w-0 flex-1 bg-transparent px-4 text-base text-white placeholder-slate-500 outline-none"
+              />
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="px-4 text-slate-400 hover:text-white transition flex items-center justify-center cursor-pointer"
+                [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              >
+                @if (showPassword) {
+                  <!-- Ojo Cerrado / Ocultar -->
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+                  </svg>
+                } @else {
+                  <!-- Ojo Abierto / Mostrar -->
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Opciones extras: Recordarme y Recuperar -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-1">
+            <label class="inline-flex items-center gap-2.5 text-sm text-slate-400 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                [(ngModel)]="rememberMe"
+                name="rememberMe"
+                class="h-4.5 w-4.5 rounded border-slate-700 bg-slate-900 text-red-600 accent-red-600 focus:ring-red-500 focus:ring-offset-slate-900"
+              />
+              Mantener sesión iniciada
+            </label>
+
+            <a href="mailto:soporte@totalground.com?subject=Recuperar%20acceso%20Bitacora" class="text-sm font-semibold text-red-500 hover:text-red-400 transition">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <!-- Botón de Ingreso -->
+          <button
+            type="submit"
+            [disabled]="submitting"
+            class="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-red-600 text-base font-bold text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+          >
+            @if (!submitting) {
+              <span>Iniciar sesión</span>
+              <svg class="w-5 h-5 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            } @else {
+              <div class="flex items-center gap-2">
+                <svg class="h-5 w-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Validando credenciales...</span>
+              </div>
+            }
+          </button>
+        </form>
+
+        <!-- Enlace a Crear Cuenta / Registrarse -->
+        <div class="mt-8 border-t border-slate-800/80 pt-6 text-center">
+          <p class="text-sm text-slate-400">
+            ¿Aún no tienes cuenta?
+            <a routerLink="/register" class="font-bold text-red-500 hover:text-red-400 underline decoration-red-500/30 underline-offset-4 ml-1">
+              Registrar colaborador aquí
+            </a>
+          </p>
+        </div>
+
+        <p class="mt-4 text-center text-xs text-slate-500">
+          ¿Necesitas asistencia técnica? Contacta a
+          <a href="mailto:soporte@totalground.com" class="font-medium text-slate-400 hover:text-white underline underline-offset-2">soporte</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer Copyright -->
+    <footer class="absolute bottom-6 left-0 right-0 hidden text-center text-xs text-slate-500 lg:block">
+      Total Ground &copy; 2026 &middot; Todos los derechos reservados
+    </footer>
+  </section>
+</main>

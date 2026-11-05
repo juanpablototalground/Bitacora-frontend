@@ -1,0 +1,1305 @@
+<div class="min-h-screen bg-[#080c13] text-white antialiased selection:bg-red-600 selection:text-white flex flex-col">
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-30 border-b border-white/10 bg-[#090e16]/90 backdrop-blur-md px-4 sm:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Lado Izquierdo: Logotipo y Pestañas de Navegación -->
+      <div class="flex items-center gap-6 sm:gap-8">
+        <!-- Logo Corporativo -->
+        <div class="flex items-center gap-3">
+          <img src="/02-TG-Logo.png" alt="Total Ground" class="h-9 w-auto object-contain drop-shadow-[0_2px_12px_rgba(227,6,19,0.3)]" />
+          <div class="hidden lg:block border-l border-white/10 pl-3">
+            <p class="text-xs font-bold tracking-tight text-white leading-none">TOTAL GROUND</p>
+            <p class="text-[9px] font-semibold tracking-[0.25em] text-red-500 uppercase mt-0.5">Bitácora Operativa</p>
+          </div>
+        </div>
+
+        <!-- Pestañas del Menú de Navegación -->
+        <nav class="flex items-center gap-1 sm:gap-2">
+          <!-- Pestaña 1: Reporte Diario -->
+          <button
+            type="button"
+            (click)="setTab('reportes')"
+            class="group relative flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer"
+            [ngClass]="activeTab() === 'reportes' 
+              ? 'bg-red-600/15 text-white border border-red-500/40 shadow-[0_0_20px_rgba(227,6,19,0.25)]' 
+              : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'"
+          >
+            <svg class="w-4 h-4 transition-colors" [ngClass]="activeTab() === 'reportes' ? 'text-red-500' : 'text-slate-500 group-hover:text-slate-300'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>Reporte Diario</span>
+            @if (activeTab() === 'reportes') {
+              <span class="absolute -bottom-3 left-1/2 -translate-x-1/2 h-0.5 w-8 bg-red-500 rounded-full shadow-[0_0_8px_#ef4444]"></span>
+            }
+          </button>
+
+          <!-- Pestaña 2: Control de Salidas -->
+          <button
+            type="button"
+            (click)="setTab('salidas')"
+            class="group relative flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer"
+            [ngClass]="activeTab() === 'salidas' 
+              ? 'bg-red-600/15 text-white border border-red-500/40 shadow-[0_0_20px_rgba(227,6,19,0.25)]' 
+              : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'"
+          >
+            <svg class="w-4 h-4 transition-colors" [ngClass]="activeTab() === 'salidas' ? 'text-red-500' : 'text-slate-500 group-hover:text-slate-300'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            <span>Control de Salidas</span>
+            @if (activeTab() === 'salidas') {
+              <span class="absolute -bottom-3 left-1/2 -translate-x-1/2 h-0.5 w-8 bg-red-500 rounded-full shadow-[0_0_8px_#ef4444]"></span>
+            }
+          </button>
+
+          <!-- Pestaña 3: Proyectos de IT (Solo Admin y Sistemas / TI) -->
+          @if (canAccessProyectos()) {
+            <button
+              type="button"
+              (click)="setTab('proyectos')"
+              class="group relative flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer"
+              [ngClass]="activeTab() === 'proyectos' 
+                ? 'bg-red-600/15 text-white border border-red-500/40 shadow-[0_0_20px_rgba(227,6,19,0.25)]' 
+                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'"
+            >
+              <svg class="w-4 h-4 transition-colors" [ngClass]="activeTab() === 'proyectos' ? 'text-red-500' : 'text-slate-500 group-hover:text-slate-300'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+              <span>Proyectos IT</span>
+              <span class="rounded bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-1.5 py-0.2 font-semibold uppercase">
+                TI
+              </span>
+              @if (activeTab() === 'proyectos') {
+                <span class="absolute -bottom-3 left-1/2 -translate-x-1/2 h-0.5 w-8 bg-red-500 rounded-full shadow-[0_0_8px_#ef4444]"></span>
+              }
+            </button>
+          }
+        </nav>
+      </div>
+
+      <!-- Lado Derecho: Usuario, Rol y Salir -->
+      <div class="flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 border-white/5 pt-2 md:pt-0">
+        <div class="text-left md:text-right">
+          <div class="flex items-center md:justify-end gap-2">
+            <p class="text-xs font-bold text-white leading-tight">{{ user()?.nombre || 'Colaborador' }}</p>
+            @if (isAdmin()) {
+              <span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[9px] px-2 py-0.5 rounded font-black tracking-wider uppercase">
+                ADMIN
+              </span>
+            }
+          </div>
+          <p class="text-[11px] text-slate-400 flex items-center md:justify-end gap-1.5 mt-0.5">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            {{ user()?.area || 'General' }}
+          </p>
+        </div>
+
+        <button
+          (click)="logout()"
+          class="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-2 text-xs font-semibold text-red-400 transition hover:bg-red-600 hover:text-white active:scale-95 cursor-pointer shadow-sm"
+          title="Cerrar sesión"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          <span class="hidden sm:inline">Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN 1: REPORTE DIARIO DE ACTIVIDADES   -->
+    <!-- ========================================== -->
+    @if (activeTab() === 'reportes') {
+      <div class="space-y-6 animate-fade-in">
+        <!-- BANNER CORPORATIVO ESTILO REFERENCIA EXACTA -->
+        <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="inline-block rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 py-3 shadow-[0_4px_25px_rgba(227,6,19,0.4)]">
+                <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white uppercase flex items-center gap-2">
+                  <span>REPORTE DIARIO</span>
+                </h1>
+              </div>
+              <p class="mt-2 text-xs sm:text-sm font-medium text-red-400 tracking-wide flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                Audiovisuales / Diseño Gráfico / Sistemas
+                @if (!isAdmin()) {
+                  <span class="text-slate-400 text-xs ml-2 font-normal">(Registros personales de {{ user()?.nombre }})</span>
+                } @else {
+                  <span class="text-amber-400 text-xs ml-2 font-bold">(Vista Global de Administrador)</span>
+                }
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button
+                (click)="abrirReporteModal()"
+                class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+                <span>Nuevo Reporte Diario</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Métricas Resumen -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Actividades</p>
+              <p class="text-2xl font-black text-white mt-1">{{ totalReportes() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+              
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Revisados por Admin</p>
+              <p class="text-2xl font-black text-emerald-400 mt-1">{{ reportesRevisados() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+              ✓
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Pendientes de Visto</p>
+              <p class="text-2xl font-black text-amber-400 mt-1">{{ reportesPendientes() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
+              ⏳
+            </div>
+          </div>
+        </section>
+
+        <!-- TABLA: REPORTE DIARIO DE ACTIVIDADES -->
+        <section class="rounded-2xl border border-white/10 bg-[#0c121d] shadow-2xl overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0f1726]/60">
+            <div class="relative w-full sm:w-80">
+              <input
+                type="text"
+                [ngModel]="searchReportes()"
+                (ngModelChange)="searchReportes.set($event)"
+                placeholder="Buscar trabajo, colaborador, observaciones..."
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500/30"
+              />
+              <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                (click)="cargarReportes()"
+                class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-xs font-medium text-slate-300 transition"
+                title="Recargar actividades"
+              >
+                <svg class="w-3.5 h-3.5" [class.animate-spin]="loadingReportes()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span>Actualizar</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-gradient-to-r from-red-600 to-red-700 text-white text-xs font-black uppercase tracking-wider divide-x divide-red-500/40">
+                  <th class="px-4 py-3.5 text-center w-12">#</th>
+                  @if (isAdmin()) {
+                    <th class="px-5 py-3.5">COLABORADOR</th>
+                  }
+                  <th class="px-5 py-3.5">TRABAJO</th>
+                  <th class="px-5 py-3.5 text-center">FECHA INICIO / HORA</th>
+                  <th class="px-5 py-3.5 text-center">FECHA TERMINO / HORA</th>
+                  <th class="px-4 py-3.5 text-center">VISTO</th>
+                  <th class="px-5 py-3.5">OBSERVACIONES</th>
+                  <th class="px-5 py-3.5">COMENTARIOS</th>
+                  <th class="px-3 py-3.5 text-center w-14">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5 text-xs text-slate-300">
+                @if (loadingReportes()) {
+                  <tr>
+                    <td [attr.colspan]="isAdmin() ? 9 : 8" class="px-6 py-12 text-center text-slate-400">
+                      <div class="inline-flex items-center gap-3">
+                        <svg class="w-5 h-5 animate-spin text-red-500" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Cargando actividades diarias...</span>
+                      </div>
+                    </td>
+                  </tr>
+                } @else if (filteredReportes().length === 0) {
+                  <tr>
+                    <td [attr.colspan]="isAdmin() ? 9 : 8" class="px-6 py-16 text-center text-slate-500">
+                      <p class="text-sm font-semibold text-slate-400">No hay reportes de actividades registrados.</p>
+                      <p class="text-xs text-slate-500 mt-1">Presiona "+ Nuevo Reporte Diario" para añadir una actividad.</p>
+                    </td>
+                  </tr>
+                } @else {
+                  @for (rep of filteredReportes(); track rep.idReportes) {
+                    <tr class="row-hover-effect border-b border-white/5 transition-colors duration-150">
+                      <td class="px-4 py-3 text-center text-slate-500 font-mono text-[11px]">
+                        {{ rep.idReportes }}
+                      </td>
+
+                      <!-- COLABORADOR (Visible si es Admin) -->
+                      @if (isAdmin()) {
+                        <td class="px-5 py-3 whitespace-nowrap font-medium text-white">
+                          <div class="flex items-center gap-2">
+                            <div class="h-6 w-6 rounded-full bg-red-600/20 border border-red-500/30 flex items-center justify-center text-[10px] font-bold text-red-400">
+                              {{ (rep.usuario?.nombre || 'U').charAt(0).toUpperCase() }}
+                            </div>
+                            <div>
+                              <p class="font-semibold text-white leading-tight">{{ rep.usuario?.nombre || 'Usuario' }}</p>
+                              <p class="text-[10px] text-slate-400">{{ rep.usuario?.area || 'Sin Área' }}</p>
+                            </div>
+                          </div>
+                        </td>
+                      }
+
+                      <!-- TRABAJO -->
+                      <td class="px-5 py-3 font-semibold text-white max-w-sm">
+                        <p class="text-sm leading-snug">{{ rep.trabajo }}</p>
+                      </td>
+
+                      <!-- FECHA INICIO / HORA -->
+                      <td class="px-5 py-3 text-center whitespace-nowrap font-mono">
+                        <span class="inline-flex items-center gap-1.5 bg-slate-900/90 text-slate-200 border border-white/10 px-2.5 py-1 rounded-lg text-xs">
+                          <span>⏱️</span>
+                          <span>{{ rep.fechaInicio | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </span>
+                      </td>
+
+                      <!-- FECHA TERMINO / HORA -->
+                      <td class="px-5 py-3 text-center whitespace-nowrap font-mono">
+                        <span class="inline-flex items-center gap-1.5 bg-slate-900/90 text-slate-200 border border-white/10 px-2.5 py-1 rounded-lg text-xs">
+                          <span>🏁</span>
+                          <span>{{ rep.fechaTermino | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </span>
+                      </td>
+
+                      <!-- VISTO (Solo Administrador puede interactuar) -->
+                      <td class="px-4 py-3 text-center whitespace-nowrap">
+                        @if (isAdmin()) {
+                          <button
+                            (click)="toggleRevisadoReporte(rep)"
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer"
+                            [ngClass]="rep.revisado 
+                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.2)]' 
+                              : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20'"
+                            title="Administrador: Haz clic para alternar Visto / Pendiente"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full" [ngClass]="rep.revisado ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                            <span>{{ rep.revisado ? 'VISTO' : 'PENDIENTE' }}</span>
+                          </button>
+                        } @else {
+                          <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold cursor-default opacity-90"
+                            [ngClass]="rep.revisado 
+                              ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
+                              : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'"
+                            title="Estado de revisión asignado por el administrador"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full" [ngClass]="rep.revisado ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                            <span>{{ rep.revisado ? 'VISTO' : 'PENDIENTE' }}</span>
+                          </span>
+                        }
+                      </td>
+
+                      <!-- OBSERVACIONES -->
+                      <td class="px-5 py-3 text-slate-300 max-w-xs truncate" [title]="rep.observaciones">
+                        {{ rep.observaciones || '—' }}
+                      </td>
+
+                      <!-- COMENTARIOS -->
+                      <td class="px-5 py-3 text-slate-300 max-w-xs truncate" [title]="rep.comentarios">
+                        {{ rep.comentarios || '—' }}
+                      </td>
+
+                      <!-- ACCIÓN -->
+                      <td class="px-3 py-3 text-center">
+                        <button
+                          (click)="eliminarReporte(rep.idReportes)"
+                          class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer"
+                          title="Eliminar reporte"
+                        >
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="px-5 py-3 bg-[#0a0f19] border-t border-white/5 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Mostrando {{ filteredReportes().length }} actividad(es)</span>
+            <span class="font-mono">TABLA: reportes &middot; TOTAL GROUND</span>
+          </div>
+        </section>
+      </div>
+    }
+
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN 2: CONTROL DE SALIDAS              -->
+    <!-- ========================================== -->
+    @if (activeTab() === 'salidas') {
+      <div class="space-y-6 animate-fade-in">
+        <!-- BANNER TOTAL GROUND CONTROL DE SALIDAS -->
+        <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="inline-block rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 py-3 shadow-[0_4px_25px_rgba(227,6,19,0.4)]">
+                <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white uppercase flex items-center gap-2">
+                  <span>CONTROL DE SALIDAS</span>
+                  <span class="text-white/70">/</span>
+                  <span class="tracking-widest">{{ currentMonthName }} {{ currentYear }}</span>
+                </h1>
+              </div>
+              <p class="mt-2 text-xs sm:text-sm font-medium text-red-400 tracking-wide flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                Sistemas / Diseño Gráfico / Audiovisuales 
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button
+                (click)="abrirSalidaModal()"
+                class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+                <span>Nueva Salida / Entrada</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Métricas Salidas -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Registros</p>
+              <p class="text-2xl font-black text-white mt-1">{{ totalSalidas() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+              ◈
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Revisados / Visto</p>
+              <p class="text-2xl font-black text-emerald-400 mt-1">{{ salidasRevisadas() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+              ✓
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Pendientes de Visto</p>
+              <p class="text-2xl font-black text-amber-400 mt-1">{{ salidasPendientes() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
+              ⏳
+            </div>
+          </div>
+        </section>
+
+        <!-- TABLA: CONTROL DE SALIDAS -->
+        <section class="rounded-2xl border border-white/10 bg-[#0c121d] shadow-2xl overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0f1726]/60">
+            <div class="relative w-full sm:w-80">
+              <input
+                type="text"
+                [ngModel]="searchSalidas()"
+                (ngModelChange)="searchSalidas.set($event)"
+                placeholder="Buscar por colaborador, lugar, área..."
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500/30"
+              />
+              <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                (click)="cargarSalidas()"
+                class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-xs font-medium text-slate-300 transition"
+                title="Recargar datos"
+              >
+                <svg class="w-3.5 h-3.5" [class.animate-spin]="loadingSalidas()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span>Actualizar</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-gradient-to-r from-red-600 to-red-700 text-white text-xs font-black uppercase tracking-wider divide-x divide-red-500/40">
+                  <th class="px-4 py-3.5 text-center w-12">#</th>
+                  <th class="px-5 py-3.5">NOMBRE</th>
+                  <th class="px-4 py-3.5">FECHA</th>
+                  <th class="px-5 py-3.5 text-center">LUGAR</th>
+                  <th class="px-5 py-3.5 text-center">HORA SALIDA</th>
+                  <th class="px-5 py-3.5 text-center">HORA ENTRADA</th>
+                  <th class="px-4 py-3.5 text-center">VISTO</th>
+                  <th class="px-5 py-3.5">COMENTARIOS</th>
+                  <th class="px-3 py-3.5 text-center w-14">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5 text-xs text-slate-300">
+                @if (loadingSalidas()) {
+                  <tr>
+                    <td colspan="9" class="px-6 py-12 text-center text-slate-400">
+                      <div class="inline-flex items-center gap-3">
+                        <svg class="w-5 h-5 animate-spin text-red-500" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Cargando registros...</span>
+                      </div>
+                    </td>
+                  </tr>
+                } @else if (filteredSalidas().length === 0) {
+                  <tr>
+                    <td colspan="9" class="px-6 py-16 text-center text-slate-500">
+                      <p class="text-sm font-semibold text-slate-400">No hay registros de salidas en este periodo.</p>
+                      <p class="text-xs text-slate-500 mt-1">Haz clic en "+ Nueva Salida / Entrada" para registrar.</p>
+                    </td>
+                  </tr>
+                } @else {
+                  @for (salida of filteredSalidas(); track salida.id) {
+                    <tr class="row-hover-effect border-b border-white/5 transition-colors duration-150">
+                      <td class="px-4 py-3 text-center text-slate-500 font-mono text-[11px]">
+                        {{ salida.id }}
+                      </td>
+
+                      <td class="px-5 py-3 font-medium text-white whitespace-nowrap">
+                        <div class="flex items-center gap-2">
+                          <div class="h-7 w-7 rounded-full bg-red-600/20 border border-red-500/30 flex items-center justify-center text-[10px] font-bold text-red-400">
+                            {{ (salida.usuario?.nombre || 'U').charAt(0).toUpperCase() }}
+                          </div>
+                          <div>
+                            <p class="font-semibold text-white leading-tight">
+                              {{ salida.usuario?.nombre || 'Usuario #' + salida.idUser }}
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-normal">
+                              {{ salida.usuario?.area || 'Sin Área' }}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td class="px-4 py-3 whitespace-nowrap font-mono text-slate-300">
+                        {{ salida.Fecha }}
+                      </td>
+
+                      <td class="px-5 py-3 text-center whitespace-nowrap">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide {{ getLugarBadgeClass(salida.Lugar) }}">
+                          {{ salida.Lugar }}
+                        </span>
+                      </td>
+
+                      <td class="px-5 py-3 text-center whitespace-nowrap font-mono">
+                        <span class="inline-flex items-center gap-1.5 bg-red-500/10 text-red-400 border border-red-500/25 px-2.5 py-1 rounded-lg text-xs font-semibold">
+                          <span>📤</span>
+                          <span>{{ salida.FechaSalida | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </span>
+                      </td>
+
+                      <td class="px-5 py-3 text-center whitespace-nowrap font-mono">
+                        <span class="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-2.5 py-1 rounded-lg text-xs font-semibold">
+                          <span>📥</span>
+                          <span>{{ salida.FechaEntrada | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </span>
+                      </td>
+
+                      <!-- VISTO (Solo Administrador puede interactuar) -->
+                      <td class="px-4 py-3 text-center whitespace-nowrap">
+                        @if (isAdmin()) {
+                          <button
+                            (click)="toggleRevisadoSalida(salida)"
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer"
+                            [ngClass]="salida.Revisado 
+                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.2)]' 
+                              : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20'"
+                            title="Administrador: Haz clic para alternar Visto / Pendiente"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full" [ngClass]="salida.Revisado ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                            <span>{{ salida.Revisado ? 'VISTO' : 'PENDIENTE' }}</span>
+                          </button>
+                        } @else {
+                          <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold cursor-default opacity-90"
+                            [ngClass]="salida.Revisado 
+                              ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
+                              : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'"
+                            title="Estado de revisión asignado por el administrador"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full" [ngClass]="salida.Revisado ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                            <span>{{ salida.Revisado ? 'VISTO' : 'PENDIENTE' }}</span>
+                          </span>
+                        }
+                      </td>
+
+                      <td class="px-5 py-3 text-slate-300 max-w-xs truncate" [title]="salida.Comentarios">
+                        {{ salida.Comentarios || '—' }}
+                      </td>
+
+                      <td class="px-3 py-3 text-center">
+                        <button
+                          (click)="eliminarSalida(salida.id)"
+                          class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer"
+                          title="Eliminar registro"
+                        >
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="px-5 py-3 bg-[#0a0f19] border-t border-white/5 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Mostrando {{ filteredSalidas().length }} registro(s)</span>
+            <span class="font-mono">TABLA: controlsalidas &middot; TOTAL GROUND</span>
+          </div>
+        </section>
+      </div>
+    }
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN 3: PROYECTOS DE TI / SISTEMAS       -->
+    <!-- (Solo Administrador y Sistemas / TI)        -->
+    <!-- ========================================== -->
+    @if (activeTab() === 'proyectos' && canAccessProyectos()) {
+      <div class="space-y-6 animate-fade-in">
+        <!-- BANNER DE LA IMAGEN: PROYECTOS PENDIENTES / NOVIEMBRE 2026 -->
+        <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <!-- Barra estilo Excel corporativo roja y negra -->
+              <div class="inline-block rounded-xl overflow-hidden shadow-[0_4px_25px_rgba(227,6,19,0.4)] border border-red-500/30">
+                <div class="bg-red-600 px-6 py-2.5">
+                  <h1 class="text-base sm:text-xl font-black tracking-widest text-white uppercase flex items-center gap-2">
+                    <span>PROYECTOS IT / {{ currentMonthName }} {{ currentYear }}</span>
+                  </h1>
+                </div>
+                <div class="bg-black/90 px-6 py-1 border-t border-red-500/30 text-center">
+                  <span class="text-xs font-bold tracking-widest text-white uppercase">Sistemas</span>
+                </div>
+              </div>
+
+              <p class="mt-3 text-xs sm:text-sm font-medium text-slate-400 tracking-wide flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                Control y seguimiento de repositorios y proyectos tecnológicos
+                <span class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] px-2 py-0.5 rounded font-bold uppercase">
+                  Exclusivo Sistemas / Admin
+                </span>
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button
+                (click)="abrirCrearProyectoModal()"
+                class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+                <span>Nuevo Proyecto IT</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Métricas Resumen Proyectos -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total de Proyectos</p>
+              <p class="text-2xl font-black text-white mt-1">{{ totalProyectos() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+              🚀
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-amber-400">Fase Pendiente</p>
+              <p class="text-2xl font-black text-amber-400 mt-1">{{ proyectosPendientes() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
+              ⏳
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Fase Completado</p>
+              <p class="text-2xl font-black text-emerald-400 mt-1">{{ proyectosCompletados() }}</p>
+            </div>
+            <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+              ✓
+            </div>
+          </div>
+        </section>
+
+        <!-- Barra de Búsqueda y Filtro por Fase -->
+        <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#111722]/60 p-3.5 rounded-2xl border border-white/5">
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input
+              type="text"
+              [ngModel]="searchProyectos()"
+              (ngModelChange)="searchProyectos.set($event)"
+              placeholder="Buscar por nombre, descripción, repositorio GitHub o notas..."
+              class="w-full bg-slate-950/70 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
+            />
+          </div>
+
+          <!-- Filtro de Estado: Todas | Pendiente | Completado -->
+          <div class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-white/5 self-start sm:self-auto">
+            <button
+              type="button"
+              (click)="filtroEstadoProyecto.set('todos')"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer"
+              [ngClass]="filtroEstadoProyecto() === 'todos' ? 'bg-red-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'"
+            >
+              Todos ({{ totalProyectos() }})
+            </button>
+            <button
+              type="button"
+              (click)="filtroEstadoProyecto.set('Pendiente')"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
+              [ngClass]="filtroEstadoProyecto() === 'Pendiente' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm' : 'text-slate-400 hover:text-white'"
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+              Pendientes ({{ proyectosPendientes() }})
+            </button>
+            <button
+              type="button"
+              (click)="filtroEstadoProyecto.set('Completado')"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
+              [ngClass]="filtroEstadoProyecto() === 'Completado' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm' : 'text-slate-400 hover:text-white'"
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              Completados ({{ proyectosCompletados() }})
+            </button>
+          </div>
+        </section>
+
+        <!-- TABLA IDÉNTICA A LA CABECERA DE LA IMAGEN DE TOTAL GROUND -->
+        <section class="rounded-2xl border border-white/10 bg-[#111722]/90 backdrop-blur-md overflow-hidden shadow-2xl">
+          <!-- Franja decorativa estilo Total Ground -->
+          <div class="bg-gradient-to-r from-red-600 via-red-600 to-black px-5 py-2.5 flex items-center justify-between text-xs font-bold text-white uppercase tracking-wider">
+            <span class="flex items-center gap-2">
+              <span class="text-sm">◈</span>
+              SISTEMAS &middot; PROYECTOS Y REPOSITORIOS
+            </span>
+            <span class="text-[11px] opacity-80 lowercase font-mono">tabla: proyectos</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#0b1019] text-white uppercase text-[11px] font-bold tracking-wider border-b border-red-950/60">
+                <tr>
+                  <th scope="col" class="px-5 py-3.5 text-slate-400 w-12 text-center">ID</th>
+                  <!-- Encabezados exactos según la imagen de usuario: Nombre, Descripción, Estado de proyecto, Link del repositorio en Github, Observaciones -->
+                  <th scope="col" class="px-5 py-3.5 text-red-400 font-extrabold">Nombre</th>
+                  <th scope="col" class="px-5 py-3.5 text-slate-200 font-bold">Descripción</th>
+                  <th scope="col" class="px-5 py-3.5 text-center font-bold">Estado de proyecto</th>
+                  <th scope="col" class="px-5 py-3.5 font-bold">Link del repositorio en Github</th>
+                  <th scope="col" class="px-5 py-3.5 text-slate-300 font-bold">Observaciones</th>
+                  <th scope="col" class="px-4 py-3.5 text-center font-bold w-24">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5">
+                @if (loadingProyectos()) {
+                  <tr>
+                    <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                      <div class="inline-flex items-center gap-3">
+                        <span class="h-4 w-4 rounded-full border-2 border-red-500 border-t-transparent animate-spin"></span>
+                        <span>Cargando proyectos de IT / Sistemas...</span>
+                      </div>
+                    </td>
+                  </tr>
+                } @else if (filteredProyectos().length === 0) {
+                  <tr>
+                    <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                      <div class="flex flex-col items-center justify-center">
+                        <p class="font-medium text-white">No se encontraron proyectos registrados</p>
+                        <p class="text-xs text-slate-500 mt-1">Haz clic en "+ Nuevo Proyecto IT" para registrar el primero.</p>
+                      </div>
+                    </td>
+                  </tr>
+                } @else {
+                  @for (p of filteredProyectos(); track p.idProyectos) {
+                    <tr class="hover:bg-white/[0.02] transition-colors group">
+                      <!-- ID -->
+                      <td class="px-5 py-3.5 text-slate-500 text-center font-mono text-xs">
+                        #{{ p.idProyectos }}
+                      </td>
+
+                      <!-- Nombre de Proyecto -->
+                      <td class="px-5 py-3.5 font-bold text-white">
+                        <div class="flex items-center gap-2">
+                          <span class="h-2 w-2 rounded-full" [ngClass]="p.estadoProyecto?.toLowerCase() === 'completado' ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+                          <span>{{ p.Nombreproyecto }}</span>
+                        </div>
+                      </td>
+
+                      <!-- Descripción -->
+                      <td class="px-5 py-3.5 text-slate-300 max-w-sm">
+                        <p class="line-clamp-2">{{ p.descripcion }}</p>
+                      </td>
+
+                      <!-- Estado de proyecto (Interactivo: 2 fases Pendiente / Completado) -->
+                      <td class="px-5 py-3.5 text-center whitespace-nowrap">
+                        <div class="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/70 border border-white/5">
+                          <button
+                            type="button"
+                            (click)="cambiarEstadoProyecto(p, 'Pendiente')"
+                            class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer flex items-center gap-1"
+                            [ngClass]="p.estadoProyecto?.toLowerCase() === 'pendiente'
+                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+                              : 'text-slate-500 hover:text-slate-300'"
+                            title="Cambiar a fase Pendiente"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+                            <span>Pendiente</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            (click)="cambiarEstadoProyecto(p, 'Completado')"
+                            class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer flex items-center gap-1"
+                            [ngClass]="p.estadoProyecto?.toLowerCase() === 'completado'
+                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                              : 'text-slate-500 hover:text-slate-300'"
+                            title="Cambiar a fase Completado"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                            <span>Completado</span>
+                          </button>
+                        </div>
+                      </td>
+
+                      <!-- Link del repositorio en Github -->
+                      <td class="px-5 py-3.5">
+                        @if (p.enlaceRepositorio) {
+                          <a
+                            [href]="p.enlaceRepositorio"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 hover:underline max-w-xs truncate font-mono bg-slate-950/60 px-2.5 py-1 rounded-lg border border-red-500/20"
+                            [title]="p.enlaceRepositorio"
+                          >
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                            </svg>
+                            <span class="truncate">{{ p.enlaceRepositorio }}</span>
+                          </a>
+                        } @else {
+                          <span class="text-slate-500">—</span>
+                        }
+                      </td>
+
+                      <!-- Observaciones -->
+                      <td class="px-5 py-3.5 text-slate-300 max-w-xs truncate" [title]="p.observaciones">
+                        {{ p.observaciones || 'Sin observaciones' }}
+                      </td>
+
+                      <!-- Acciones (Editar y Eliminar) -->
+                      <td class="px-4 py-3.5 text-center whitespace-nowrap">
+                        <div class="flex items-center justify-center gap-1">
+                          <button
+                            (click)="abrirEditarProyectoModal(p)"
+                            class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition cursor-pointer"
+                            title="Editar proyecto"
+                          >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                          </button>
+                          <button
+                            (click)="eliminarProyecto(p.idProyectos)"
+                            class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer"
+                            title="Eliminar proyecto"
+                          >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="px-5 py-3 bg-[#0a0f19] border-t border-white/5 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Mostrando {{ filteredProyectos().length }} proyecto(s)</span>
+            <span class="font-mono">TABLA: proyectos &middot; TOTAL GROUND</span>
+          </div>
+        </section>
+      </div>
+    }
+  </main>
+
+  <!-- MODAL: REGISTRAR NUEVO REPORTE DIARIO -->
+  @if (showReporteModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              📝
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Nuevo Reporte Diario</h3>
+              <p class="text-xs text-slate-400">Registrar actividad en la tabla Reportes</p>
+            </div>
+          </div>
+          <button (click)="cerrarReporteModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none cursor-pointer">&times;</button>
+        </div>
+
+        @if (reporteModalError()) {
+          <div class="mt-4 rounded-xl border border-red-500/50 bg-red-950/40 p-3 text-xs text-red-200">
+            {{ reporteModalError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarReporte()" class="mt-5 space-y-4">
+          <!-- Trabajo / Actividad -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Trabajo / Actividad Realizada <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="trabajo"
+              [(ngModel)]="nuevoReporte.trabajo"
+              required
+              placeholder="Ej. Capacitación de herramientas de trabajo"
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            />
+          </div>
+
+          <!-- Fechas y Horas: Inicio y Término -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Fecha / Hora Inicio <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="fechaInicio"
+                [(ngModel)]="nuevoReporte.fechaInicio"
+                required
+                class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none focus:border-red-500 font-mono"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Fecha / Hora Término <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="fechaTermino"
+                [(ngModel)]="nuevoReporte.fechaTermino"
+                required
+                class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none focus:border-red-500 font-mono"
+              />
+            </div>
+          </div>
+
+          <!-- Observaciones -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Observaciones
+            </label>
+            <input
+              type="text"
+              name="observaciones"
+              [(ngModel)]="nuevoReporte.observaciones"
+              placeholder="Ej. En proceso, bloqueos o detalles de entrega..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            />
+          </div>
+
+          <!-- Comentarios -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Comentarios
+            </label>
+            <textarea
+              name="comentarios"
+              [(ngModel)]="nuevoReporte.comentarios"
+              rows="2"
+              placeholder="Notas adicionales..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <p class="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-white/5 flex items-center gap-2">
+            <span>ℹ️</span>
+            <span>El registro se creará con estado <strong>PENDIENTE</strong> por defecto y solo el Administrador podrá marcarlo como <strong>VISTO</strong>.</span>
+          </p>
+
+          <!-- Botones de Acción -->
+          <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+            <button
+              type="button"
+              (click)="cerrarReporteModal()"
+              class="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5 cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="submittingReporte()"
+              class="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-2 text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer"
+            >
+              @if (submittingReporte()) {
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Reporte</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- MODAL: REGISTRAR NUEVA SALIDA / ENTRADA -->
+  @if (showSalidaModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              +
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Nueva Salida / Entrada</h3>
+              <p class="text-xs text-slate-400">Registrar en Control de Salidas</p>
+            </div>
+          </div>
+          <button (click)="cerrarSalidaModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none cursor-pointer">&times;</button>
+        </div>
+
+        @if (salidaModalError()) {
+          <div class="mt-4 rounded-xl border border-red-500/50 bg-red-950/40 p-3 text-xs text-red-200">
+            {{ salidaModalError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarSalida()" class="mt-5 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              Lugar / Destino <span class="text-red-500">*</span>
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1.5 rounded-xl border border-slate-700/80 bg-slate-950/70">
+              @for (opcion of lugaresDisponibles; track opcion.label) {
+                <button
+                  type="button"
+                  (click)="nuevaSalida.Lugar = opcion.label"
+                  class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer text-left"
+                  [ngClass]="nuevaSalida.Lugar === opcion.label 
+                    ? opcion.badgeClass + ' ring-2 ring-white/50 shadow-md scale-[1.02]' 
+                    : 'bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-transparent'"
+                >
+                  <span>{{ opcion.label }}</span>
+                  @if (nuevaSalida.Lugar === opcion.label) {
+                    <span class="text-[10px]">✓</span>
+                  }
+                </button>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Fecha de Registro <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="fecha"
+              [(ngModel)]="nuevaSalida.Fecha"
+              required
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2.5 text-sm text-white outline-none focus:border-red-500 font-mono"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Hora Salida <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="fechaSalida"
+                [(ngModel)]="nuevaSalida.FechaSalida"
+                required
+                class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none focus:border-red-500 font-mono"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Hora Entrada <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="fechaEntrada"
+                [(ngModel)]="nuevaSalida.FechaEntrada"
+                required
+                class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none focus:border-red-500 font-mono"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Comentarios u Observaciones
+            </label>
+            <textarea
+              name="comentarios"
+              [(ngModel)]="nuevaSalida.Comentarios"
+              rows="2"
+              placeholder="Asunto, motivo de traslado, detalles..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+            <button
+              type="button"
+              (click)="cerrarSalidaModal()"
+              class="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5 cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="submittingSalida()"
+              class="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-2 text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer"
+            >
+              @if (submittingSalida()) {
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Salida</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- MODAL: CREAR / EDITAR PROYECTO IT -->
+  @if (showProyectoModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              💻
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">
+                {{ editingProyectoId() ? 'Editar Proyecto IT' : 'Nuevo Proyecto IT' }}
+              </h3>
+              <p class="text-xs text-slate-400">Seguimiento en la tabla Proyectos de Sistemas</p>
+            </div>
+          </div>
+          <button (click)="cerrarProyectoModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none cursor-pointer">&times;</button>
+        </div>
+
+        @if (proyectoModalError()) {
+          <div class="mt-4 rounded-xl border border-red-500/50 bg-red-950/40 p-3 text-xs text-red-200">
+            {{ proyectoModalError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarProyecto()" class="mt-5 space-y-4">
+          <!-- Nombre del Proyecto -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Nombre del Proyecto <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="Nombreproyecto"
+              [(ngModel)]="nuevoProyecto.Nombreproyecto"
+              required
+              maxlength="100"
+              placeholder="Ej. Bitácora Digital Total Ground"
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            />
+          </div>
+
+          <!-- Descripción -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Descripción <span class="text-red-500">*</span>
+            </label>
+            <textarea
+              name="descripcion"
+              [(ngModel)]="nuevoProyecto.descripcion"
+              required
+              maxlength="100"
+              rows="2"
+              placeholder="Breve descripción del alcance del proyecto..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <!-- Estado del proyecto (Fase Pendiente o Completado) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Fase del Proyecto <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-1.5 grid grid-cols-2 gap-3">
+              <label
+                class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition"
+                [ngClass]="nuevoProyecto.estadoProyecto === 'Pendiente'
+                  ? 'border-amber-500/60 bg-amber-500/10 text-white ring-1 ring-amber-500/40'
+                  : 'border-slate-700 bg-slate-950/50 text-slate-400 hover:text-white'"
+              >
+                <input
+                  type="radio"
+                  name="estadoProyecto"
+                  value="Pendiente"
+                  [(ngModel)]="nuevoProyecto.estadoProyecto"
+                  class="text-amber-500 focus:ring-amber-500"
+                />
+                <div class="text-xs">
+                  <p class="font-bold text-amber-400">Pendiente</p>
+                  <p class="text-[11px] text-slate-400">En desarrollo o por iniciar</p>
+                </div>
+              </label>
+
+              <label
+                class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition"
+                [ngClass]="nuevoProyecto.estadoProyecto === 'Completado'
+                  ? 'border-emerald-500/60 bg-emerald-500/10 text-white ring-1 ring-emerald-500/40'
+                  : 'border-slate-700 bg-slate-950/50 text-slate-400 hover:text-white'"
+              >
+                <input
+                  type="radio"
+                  name="estadoProyecto"
+                  value="Completado"
+                  [(ngModel)]="nuevoProyecto.estadoProyecto"
+                  class="text-emerald-500 focus:ring-emerald-500"
+                />
+                <div class="text-xs">
+                  <p class="font-bold text-emerald-400">Completado</p>
+                  <p class="text-[11px] text-slate-400">Liberado y finalizado</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Link del Repositorio en GitHub -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Link del Repositorio en Github <span class="text-red-500">*</span>
+            </label>
+            <div class="relative mt-1.5">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+              </div>
+              <input
+                type="url"
+                name="enlaceRepositorio"
+                [(ngModel)]="nuevoProyecto.enlaceRepositorio"
+                required
+                maxlength="100"
+                placeholder="https://github.com/totalground/nombre-proyecto"
+                class="w-full rounded-xl border border-slate-700 bg-slate-950/70 pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500 font-mono text-xs"
+              />
+            </div>
+          </div>
+
+          <!-- Observaciones -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Observaciones
+            </label>
+            <textarea
+              name="observaciones"
+              [(ngModel)]="nuevoProyecto.observaciones"
+              maxlength="256"
+              rows="2"
+              placeholder="Notas técnicas, credenciales de staging, dependencias..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+            <button
+              type="button"
+              (click)="cerrarProyectoModal()"
+              class="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5 cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="submittingProyecto()"
+              class="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-2 text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer"
+            >
+              @if (submittingProyecto()) {
+                <span>Guardando...</span>
+              } @else {
+                <span>{{ editingProyectoId() ? 'Actualizar Proyecto' : 'Guardar Proyecto' }}</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
