@@ -1,0 +1,400 @@
+<div class="space-y-6 animate-fade-in">
+  <!-- BANNER PROYECTOS IT TOTAL GROUND -->
+  <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-block rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 py-3 shadow-[0_4px_25px_rgba(227,6,19,0.4)]">
+          <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white uppercase flex items-center gap-2">
+            <span>PROYECTOS DE IT / SISTEMAS</span>
+          </h1>
+        </div>
+        <p class="mt-2 text-xs sm:text-sm font-medium text-red-400 tracking-wide flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+          Control y Seguimiento de Software, Infraestructura y Repositorios GitHub
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          (click)="abrirCrearProyectoModal()"
+          class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+        >
+          <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+          <span>Nuevo Proyecto IT</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Métricas Resumen Proyectos -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Proyectos</p>
+        <p class="text-2xl font-black text-white mt-1">{{ totalProyectos() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+        ◈
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">En Desarrollo (Pendiente)</p>
+        <p class="text-2xl font-black text-amber-400 mt-1">{{ proyectosPendientes() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
+        -
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Completados</p>
+        <p class="text-2xl font-black text-emerald-400 mt-1">{{ proyectosCompletados() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+        ✓
+      </div>
+    </div>
+  </section>
+
+  <!-- Filtro por Estado y Barra de Búsqueda -->
+  <section class="rounded-2xl border border-white/10 bg-[#0c121d] p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+    <div class="relative w-full sm:w-80">
+      <input
+        type="text"
+        [ngModel]="searchProyectos()"
+        (ngModelChange)="searchProyectos.set($event)"
+        placeholder="Buscar proyecto, descripción, repo..."
+        class="w-full rounded-xl border border-white/10 bg-slate-950/70 pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500/30"
+      />
+      <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </div>
+
+    <!-- Pestañas rápidas de filtro por estado -->
+    <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-white/5 self-stretch sm:self-auto justify-center">
+      <button
+        type="button"
+        (click)="filtroEstadoProyecto.set('todos')"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer"
+        [ngClass]="filtroEstadoProyecto() === 'todos' ? 'bg-red-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'"
+      >
+        Todos ({{ totalProyectos() }})
+      </button>
+
+      <button
+        type="button"
+        (click)="filtroEstadoProyecto.set('Pendiente')"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
+        [ngClass]="filtroEstadoProyecto() === 'Pendiente' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm' : 'text-slate-400 hover:text-white'"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+        Pendientes ({{ proyectosPendientes() }})
+      </button>
+
+      <button
+        type="button"
+        (click)="filtroEstadoProyecto.set('Completado')"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
+        [ngClass]="filtroEstadoProyecto() === 'Completado' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm' : 'text-slate-400 hover:text-white'"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+        Completados ({{ proyectosCompletados() }})
+      </button>
+    </div>
+  </section>
+
+  <!-- TABLA DE PROYECTOS IT -->
+  <section class="rounded-2xl border border-white/10 bg-[#111722]/90 backdrop-blur-md overflow-hidden shadow-2xl">
+    <div class="bg-gradient-to-r from-red-600 via-red-600 to-black px-5 py-2.5 flex items-center justify-between text-xs font-bold text-white uppercase tracking-wider">
+      <span class="flex items-center gap-2">
+        <span class="text-sm">◈</span>
+        SISTEMAS &middot; PROYECTOS Y REPOSITORIOS
+      </span>
+      <span class="text-[11px] opacity-80 lowercase font-mono">tabla: proyectos</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs sm:text-sm">
+        <thead class="bg-[#0b1019] text-white uppercase text-[11px] font-bold tracking-wider border-b border-red-950/60">
+          <tr>
+            <th scope="col" class="px-5 py-3.5 text-slate-400 w-12 text-center">ID</th>
+            <th scope="col" class="px-5 py-3.5 text-red-400 font-extrabold whitespace-nowrap">Nombre</th>
+            <th scope="col" class="px-5 py-3.5 text-slate-200 font-bold min-w-[280px]">Descripción</th>
+            <th scope="col" class="px-5 py-3.5 text-center font-bold whitespace-nowrap">Estado de proyecto</th>
+            <th scope="col" class="px-5 py-3.5 font-bold whitespace-nowrap">Link del repositorio en Github</th>
+            <th scope="col" class="px-5 py-3.5 text-slate-300 font-bold min-w-[240px]">Observaciones</th>
+            <th scope="col" class="px-4 py-3.5 text-center font-bold w-24">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          @if (loadingProyectos()) {
+            <tr>
+              <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                <div class="inline-flex items-center gap-3">
+                  <span class="h-4 w-4 rounded-full border-2 border-red-500 border-t-transparent animate-spin"></span>
+                  <span>Cargando proyectos de IT / Sistemas...</span>
+                </div>
+              </td>
+            </tr>
+          } @else if (filteredProyectos().length === 0) {
+            <tr>
+              <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                <div class="flex flex-col items-center justify-center">
+                  <p class="font-medium text-white">No se encontraron proyectos registrados</p>
+                  <p class="text-xs text-slate-500 mt-1">Haz clic en "+ Nuevo Proyecto IT" para registrar el primero.</p>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (p of filteredProyectos(); track p.idProyectos) {
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-5 py-3.5 text-slate-500 text-center font-mono text-xs">
+                  #{{ p.idProyectos }}
+                </td>
+
+                <td class="px-5 py-3.5 font-bold text-white">
+                  <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full" [ngClass]="p.estadoProyecto?.toLowerCase() === 'completado' ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+                    <span>{{ p.Nombreproyecto }}</span>
+                  </div>
+                </td>
+
+                <td class="px-5 py-3.5 text-slate-300 min-w-[280px]">
+                  <p class="leading-relaxed break-words">{{ p.descripcion }}</p>
+                </td>
+
+                <td class="px-5 py-3.5 text-center whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/70 border border-white/5">
+                    <button
+                      type="button"
+                      (click)="cambiarEstadoProyecto(p, 'Pendiente')"
+                      class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer flex items-center gap-1"
+                      [ngClass]="p.estadoProyecto?.toLowerCase() === 'pendiente'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+                        : 'text-slate-500 hover:text-slate-300'"
+                      title="Cambiar a fase Pendiente"
+                    >
+                      <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+                      <span>Pendiente</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      (click)="cambiarEstadoProyecto(p, 'Completado')"
+                      class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer flex items-center gap-1"
+                      [ngClass]="p.estadoProyecto?.toLowerCase() === 'completado'
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                        : 'text-slate-500 hover:text-slate-300'"
+                      title="Cambiar a fase Completado"
+                    >
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                      <span>Completado</span>
+                    </button>
+                  </div>
+                </td>
+
+                <td class="px-5 py-3.5">
+                  @if (p.enlaceRepositorio) {
+                    <a
+                      [href]="p.enlaceRepositorio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 hover:underline max-w-xs truncate font-mono bg-slate-950/60 px-2.5 py-1 rounded-lg border border-red-500/20"
+                      [title]="p.enlaceRepositorio"
+                    >
+                      <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                      </svg>
+                      <span class="truncate">{{ p.enlaceRepositorio }}</span>
+                    </a>
+                  } @else {
+                    <span class="text-slate-500">—</span>
+                  }
+                </td>
+
+                <td class="px-5 py-3.5 text-slate-300 min-w-[240px]">
+                  <p class="leading-relaxed break-words">{{ p.observaciones || 'Sin observaciones' }}</p>
+                </td>
+
+                <td class="px-4 py-3.5 text-center">
+                  <div class="inline-flex items-center gap-1">
+                    <button
+                      (click)="abrirEditarProyectoModal(p)"
+                      class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition cursor-pointer"
+                      title="Editar proyecto"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      </svg>
+                    </button>
+
+                    <button
+                      (click)="eliminarProyecto(p.idProyectos)"
+                      class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer"
+                      title="Eliminar proyecto"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-5 py-3 bg-[#0a0f19] border-t border-white/5 text-[11px] text-slate-500 flex items-center justify-between">
+      <span>Mostrando {{ filteredProyectos().length }} proyecto(s)</span>
+      <span class="font-mono">TOTAL GROUND IT DEPT</span>
+    </div>
+  </section>
+
+  <!-- MODAL: CREAR / EDITAR PROYECTO IT -->
+  @if (showProyectoModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              {{ editingProyectoId() ? '✎' : '+' }}
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">
+                {{ editingProyectoId() ? 'Editar Proyecto IT' : 'Nuevo Proyecto IT' }}
+              </h3>
+              <p class="text-xs text-slate-400">Control de Repositorios y Sistemas</p>
+            </div>
+          </div>
+          <button (click)="cerrarProyectoModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none cursor-pointer">&times;</button>
+        </div>
+
+        @if (proyectoModalError()) {
+          <div class="mt-4 rounded-xl border border-red-500/50 bg-red-950/40 p-3 text-xs text-red-200">
+            {{ proyectoModalError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarProyecto()" class="mt-5 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Nombre del Proyecto <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="Nombreproyecto"
+              [(ngModel)]="nuevoProyecto.Nombreproyecto"
+              required
+              maxlength="100"
+              placeholder="Ej. API Bitácora Digital, Migración Cloud..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500 font-medium"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Descripción
+            </label>
+            <textarea
+              name="descripcion"
+              [(ngModel)]="nuevoProyecto.descripcion"
+              maxlength="256"
+              rows="3"
+              placeholder="Objetivo principal del proyecto, arquitectura o alcance..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              Estado del Proyecto <span class="text-red-500">*</span>
+            </label>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                (click)="nuevoProyecto.estadoProyecto = 'Pendiente'"
+                class="flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition cursor-pointer"
+                [ngClass]="nuevoProyecto.estadoProyecto === 'Pendiente'
+                  ? 'border-amber-500/60 bg-amber-500/20 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                  : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'"
+              >
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <span>Pendiente (En Curso)</span>
+              </button>
+
+              <button
+                type="button"
+                (click)="nuevoProyecto.estadoProyecto = 'Completado'"
+                class="flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition cursor-pointer"
+                [ngClass]="nuevoProyecto.estadoProyecto === 'Completado'
+                  ? 'border-emerald-500/60 bg-emerald-500/20 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                  : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'"
+              >
+                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                <span>Completado</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Link del Repositorio en GitHub
+            </label>
+            <input
+              type="url"
+              name="enlaceRepositorio"
+              [(ngModel)]="nuevoProyecto.enlaceRepositorio"
+              maxlength="256"
+              placeholder="https://github.com/totalground/repositorio"
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500 font-mono text-xs"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Observaciones
+            </label>
+            <textarea
+              name="observaciones"
+              [(ngModel)]="nuevoProyecto.observaciones"
+              maxlength="256"
+              rows="2"
+              placeholder="Notas técnicas, credenciales de staging, dependencias..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+            <button
+              type="button"
+              (click)="cerrarProyectoModal()"
+              class="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5 cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="submittingProyecto()"
+              class="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-2 text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer"
+            >
+              @if (submittingProyecto()) {
+                <span>Guardando...</span>
+              } @else {
+                <span>{{ editingProyectoId() ? 'Actualizar Proyecto' : 'Guardar Proyecto' }}</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
+

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
 
 export interface UsuarioSalida {
   id: number;
@@ -14,7 +15,7 @@ export interface ControlSalida {
   idUser: number;
   Fecha: string;
   Lugar: string;
-  FechaEntrada: string;
+  FechaEntrada: string | null;
   FechaSalida: string;
   Revisado: boolean;
   Comentarios: string;
@@ -37,7 +38,7 @@ export interface SingleSalidaResponse {
   providedIn: 'root',
 })
 export class ControlSalidaService {
-  private readonly apiUrl = 'http://localhost:8001/api/v1/control-salidas';
+  private readonly apiUrl = `${API_BASE_URL}/control-salidas`;
 
   constructor(private http: HttpClient) {}
 
@@ -53,12 +54,16 @@ export class ControlSalidaService {
   createSalida(payload: {
     Fecha: string;
     Lugar: string;
-    FechaEntrada: string;
     FechaSalida: string;
+    FechaEntrada?: string | null;
     Comentarios?: string;
     Revisado?: boolean;
   }): Observable<SingleSalidaResponse> {
     return this.http.post<SingleSalidaResponse>(this.apiUrl, payload);
+  }
+
+  marcarRegreso(id: number, payload?: { FechaEntrada?: string; Comentarios?: string }): Observable<SingleSalidaResponse> {
+    return this.http.patch<SingleSalidaResponse>(`${this.apiUrl}/${id}/marcar-regreso`, payload || {});
   }
 
   toggleRevisado(id: number): Observable<SingleSalidaResponse> {

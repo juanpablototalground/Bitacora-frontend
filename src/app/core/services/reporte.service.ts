@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
 
 export interface UsuarioReporte {
   id: number;
@@ -39,7 +40,7 @@ export interface SingleReporteResponse {
   providedIn: 'root',
 })
 export class ReporteService {
-  private readonly apiUrl = 'http://localhost:8001/api/v1/reportes';
+  private readonly apiUrl = `${API_BASE_URL}/reportes`;
 
   constructor(private http: HttpClient) {}
 

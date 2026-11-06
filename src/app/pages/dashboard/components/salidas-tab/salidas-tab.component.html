@@ -1,0 +1,392 @@
+<div class="space-y-6 animate-fade-in">
+  <!-- BANNER TOTAL GROUND CONTROL DE SALIDAS -->
+  <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-block rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 py-3 shadow-[0_4px_25px_rgba(227,6,19,0.4)]">
+          <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white uppercase flex items-center gap-2">
+            <span>CONTROL DE SALIDAS</span>
+            <span class="text-white/70">/</span>
+            <span class="tracking-widest">{{ currentMonthName() }} {{ currentYear() }}</span>
+          </h1>
+        </div>
+        <p class="mt-2 text-xs sm:text-sm font-medium text-red-400 tracking-wide flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+          Sistemas / Diseño Gráfico / Audiovisuales 
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          (click)="abrirSalidaModal()"
+          class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+        >
+          <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+          <span>Nueva Salida / Entrada</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Métricas Salidas -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Registros</p>
+        <p class="text-2xl font-black text-white mt-1">{{ totalSalidas() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+        ◈
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Revisados / Visto</p>
+        <p class="text-2xl font-black text-emerald-400 mt-1">{{ salidasRevisadas() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+        ✓
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Pendientes de Visto</p>
+        <p class="text-2xl font-black text-amber-400 mt-1">{{ salidasPendientes() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
+        -
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLA: CONTROL DE SALIDAS -->
+  <section class="rounded-2xl border border-white/10 bg-[#0c121d] shadow-2xl overflow-hidden">
+    <div class="p-4 sm:p-5 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0f1726]/60">
+      <div class="relative w-full sm:w-80">
+        <input
+          type="text"
+          [ngModel]="searchSalidas()"
+          (ngModelChange)="searchSalidas.set($event)"
+          placeholder="Buscar por colaborador, lugar, área..."
+          class="w-full rounded-xl border border-white/10 bg-slate-950/70 pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500/30"
+        />
+        <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          (click)="cargarSalidas()"
+          class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-xs font-medium text-slate-300 transition"
+          title="Recargar registros"
+        >
+          <svg class="w-3.5 h-3.5" [class.animate-spin]="loadingSalidas()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span>Actualizar</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-gradient-to-r from-red-600 to-red-700 text-white text-xs font-black uppercase tracking-wider divide-x divide-red-500/40">
+            <th class="px-4 py-3.5 text-center w-12">#</th>
+            <th class="px-5 py-3.5">NOMBRE</th>
+            <th class="px-4 py-3.5">FECHA</th>
+            <th class="px-5 py-3.5 text-center">LUGAR</th>
+            <th class="px-5 py-3.5 text-center">HORA SALIDA</th>
+            <th class="px-5 py-3.5 text-center">HORA ENTRADA</th>
+            <th class="px-4 py-3.5 text-center">VISTO</th>
+            <th class="px-5 py-3.5 min-w-[280px]">COMENTARIOS</th>
+            @if (isAdmin()) {
+              <th class="px-3 py-3.5 text-center w-14">ACCIÓN</th>
+            }
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5 text-xs text-slate-300">
+          @if (loadingSalidas()) {
+            <tr>
+              <td [attr.colspan]="isAdmin() ? 9 : 8" class="px-6 py-12 text-center text-slate-400">
+                <div class="inline-flex items-center gap-3">
+                  <svg class="w-5 h-5 animate-spin text-red-500" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Cargando registros...</span>
+                </div>
+              </td>
+            </tr>
+          } @else if (filteredSalidas().length === 0) {
+            <tr>
+              <td [attr.colspan]="isAdmin() ? 9 : 8" class="px-6 py-16 text-center text-slate-500">
+                <p class="text-sm font-semibold text-slate-400">No hay registros de salidas en este periodo.</p>
+                <p class="text-xs text-slate-500 mt-1">Haz clic en "+ Nueva Salida / Entrada" para registrar.</p>
+              </td>
+            </tr>
+          } @else {
+            @for (salida of filteredSalidas(); track salida.id) {
+              <tr class="row-hover-effect border-b border-white/5 transition-colors duration-150">
+                <td class="px-4 py-3 text-center text-slate-500 font-mono text-[11px]">
+                  {{ salida.id }}
+                </td>
+
+                <td class="px-5 py-3 font-medium text-white whitespace-nowrap">
+                  <div class="flex items-center gap-2">
+                    <div class="h-7 w-7 rounded-full bg-red-600/20 border border-red-500/30 flex items-center justify-center text-[10px] font-bold text-red-400">
+                      {{ (salida.usuario?.nombre || 'U').charAt(0).toUpperCase() }}
+                    </div>
+                    <div>
+                      <p class="font-semibold text-white leading-tight">
+                        {{ salida.usuario?.nombre || 'Usuario #' + salida.idUser }}
+                      </p>
+                      <p class="text-[10px] text-slate-400 font-normal">
+                        {{ salida.usuario?.area || 'Sin Área' }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-4 py-3 whitespace-nowrap font-mono text-slate-300">
+                  {{ salida.Fecha }}
+                </td>
+
+                <td class="px-5 py-3 text-center whitespace-nowrap">
+                  <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide {{ getLugarBadgeClass(salida.Lugar) }}">
+                    {{ salida.Lugar }}
+                  </span>
+                </td>
+
+                <td class="px-5 py-3 text-center whitespace-nowrap font-mono">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/25">
+                    {{ salida.FechaSalida | date:'dd/MM/yyyy HH:mm' }}
+                  </span>
+                </td>
+
+                <td class="px-5 py-3 text-center whitespace-nowrap font-mono">
+                  @if (salida.FechaEntrada) {
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+                      {{ salida.FechaEntrada | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="marcarRegresoSalida(salida)"
+                      class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 transition active:scale-95 cursor-pointer animate-pulse"
+                      title="Haz clic cuando hayas regresado para registrar la hora actual"
+                    >
+                      Marcar Regreso
+                    </button>
+                  }
+                </td>
+
+                <!-- VISTO (Solo Administrador puede interactuar) -->
+                <td class="px-4 py-3 text-center whitespace-nowrap">
+                  @if (isAdmin()) {
+                    <button
+                      (click)="toggleRevisadoSalida(salida)"
+                      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer"
+                      [ngClass]="salida.Revisado 
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.2)]' 
+                        : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20'"
+                      title="Administrador: Haz clic para alternar Visto / Pendiente"
+                    >
+                      <span class="h-1.5 w-1.5 rounded-full" [ngClass]="salida.Revisado ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                      <span>{{ salida.Revisado ? 'VISTO' : 'PENDIENTE' }}</span>
+                    </button>
+                  } @else {
+                    <span
+                      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold cursor-default opacity-90"
+                      [ngClass]="salida.Revisado 
+                        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
+                        : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'"
+                      title="Estado de revisión asignado por el administrador"
+                    >
+                      <span class="h-1.5 w-1.5 rounded-full" [ngClass]="salida.Revisado ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                      <span>{{ salida.Revisado ? 'VISTO' : 'PENDIENTE' }}</span>
+                    </span>
+                  }
+                </td>
+
+                <td class="px-5 py-3 text-slate-300 min-w-[280px]">
+                  <p class="leading-relaxed break-words">{{ salida.Comentarios || '—' }}</p>
+                </td>
+
+                @if (isAdmin()) {
+                  <td class="px-3 py-3 text-center">
+                    <button
+                      (click)="eliminarSalida(salida.id)"
+                      class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer"
+                      title="Eliminar registro (Solo Administrador)"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-5 py-3 bg-[#0a0f19] border-t border-white/5 text-[11px] text-slate-500 flex items-center justify-between">
+      <span>Mostrando {{ filteredSalidas().length }} registro(s)</span>
+      <span class="font-mono">TABLA: controlsalidas &middot; TOTAL GROUND</span>
+    </div>
+  </section>
+
+  <!-- MODAL: REGISTRAR NUEVA SALIDA / ENTRADA -->
+  @if (showSalidaModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              +
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Nueva Salida / Entrada</h3>
+              <p class="text-xs text-slate-400">Registrar en Control de Salidas</p>
+            </div>
+          </div>
+          <button (click)="cerrarSalidaModal()" class="text-slate-400 hover:text-white text-2xl p-1 leading-none cursor-pointer">&times;</button>
+        </div>
+
+        @if (salidaModalError()) {
+          <div class="mt-4 rounded-xl border border-red-500/50 bg-red-950/40 p-3 text-xs text-red-200">
+            {{ salidaModalError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarSalida()" class="mt-5 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              Lugar / Destino <span class="text-red-500">*</span>
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1.5 rounded-xl border border-slate-700/80 bg-slate-950/70">
+              @for (opcion of lugaresDisponibles(); track opcion.label) {
+                <button
+                  type="button"
+                  (click)="nuevaSalida.Lugar = opcion.label"
+                  class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer text-left"
+                  [ngClass]="nuevaSalida.Lugar === opcion.label 
+                    ? opcion.badgeClass + ' ring-2 ring-white/50 shadow-md scale-[1.02]' 
+                    : 'bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800 border border-transparent'"
+                >
+                  <span>{{ opcion.label }}</span>
+                  @if (nuevaSalida.Lugar === opcion.label) {
+                    <span class="text-[10px]">✓</span>
+                  }
+                </button>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Fecha de Registro <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="fecha"
+              [(ngModel)]="nuevaSalida.Fecha"
+              required
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2.5 text-sm text-white outline-none focus:border-red-500 font-mono"
+            />
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Hora de Salida <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="fechaSalida"
+                [(ngModel)]="nuevaSalida.FechaSalida"
+                required
+                class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none focus:border-red-500 font-mono"
+              />
+            </div>
+
+            <!-- Opción para indicar si aún está fuera o si ya regresó -->
+            <div class="rounded-xl border border-white/10 bg-slate-900/60 p-3">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  name="salidaAunFuera"
+                  [ngModel]="salidaAunFuera()"
+                  (ngModelChange)="salidaAunFuera.set($event)"
+                  class="rounded border-slate-700 bg-slate-950 text-red-600 focus:ring-red-500 h-4 w-4 cursor-pointer"
+                />
+                <span class="text-xs font-semibold text-white">Voy saliendo ahora (Marcaré la hora de entrada al regresar)</span>
+              </label>
+
+              @if (!salidaAunFuera()) {
+                <div class="mt-3 pt-3 border-t border-white/5 animate-fade-in">
+                  <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                    Hora de Entrada
+                  </label>
+                  <input
+                    type="datetime-local"
+                    name="fechaEntrada"
+                    [(ngModel)]="nuevaSalida.FechaEntrada"
+                    class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-2 text-sm text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
+              }
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Comentarios u Observaciones
+              </label>
+              <span class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Opcional</span>
+            </div>
+            <textarea
+              name="comentarios"
+              [(ngModel)]="nuevaSalida.Comentarios"
+              rows="2"
+              placeholder="Asunto, motivo de traslado, detalles (opcional)..."
+              class="mt-1.5 w-full rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+            <button
+              type="button"
+              (click)="cerrarSalidaModal()"
+              class="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5 cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="submittingSalida()"
+              class="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-2 text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer"
+            >
+              @if (submittingSalida()) {
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Salida</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
+

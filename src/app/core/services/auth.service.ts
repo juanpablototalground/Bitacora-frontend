@@ -1,6 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map, catchError, of } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
 
 export interface User {
   id: number;
@@ -34,7 +35,7 @@ export interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:8001/api/v1/auth';
+  private readonly apiUrl = `${API_BASE_URL}/auth`;
   private currentUserSignal = signal<User | null>(this.getStoredUser());
 
   readonly currentUser = computed(() => this.currentUserSignal());
@@ -58,6 +59,30 @@ export class AuthService {
         if (res.success && res.authorization?.access_token && res.user) {
           this.saveSession(res.authorization.access_token, res.user);
         }
+      })
+    );
+  }
+
+  fetchProfile(): Observable<User | null> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.clearSession();
+      return of(null);
+    }
+
+    return this.http.get<{ success: boolean; user: User }>(`${this.apiUrl}/profile`).pipe(
+      map((res) => {
+        if (res.success && res.user) {
+          // Re-sincroniza con los datos reales e inmutables del servidor
+          this.saveSession(token, res.user);
+          return res.user;
+        }
+        this.clearSession();
+        return null;
+      }),
+      catchError(() => {
+        this.clearSession();
+        return of(null);
       })
     );
   }

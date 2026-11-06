@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
 
 export interface Proyecto {
   idProyectos: number;
@@ -27,7 +28,7 @@ export interface SingleProyectoResponse {
   providedIn: 'root',
 })
 export class ProyectoService {
-  private readonly apiUrl = 'http://localhost:8001/api/v1/proyectos';
+  private readonly apiUrl = `${API_BASE_URL}/proyectos`;
 
   constructor(private http: HttpClient) {}
 
