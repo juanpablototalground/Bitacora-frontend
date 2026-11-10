@@ -5,6 +5,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { ReportesTabComponent } from './components/reportes-tab/reportes-tab.component';
 import { SalidasTabComponent } from './components/salidas-tab/salidas-tab.component';
 import { ProyectosTabComponent } from './components/proyectos-tab/proyectos-tab.component';
+import { PersonalTabComponent } from './components/personal-tab/personal-tab.component';
+import { FoliosTabComponent } from './components/folios-tab/folios-tab.component';
+import { CatalogosTabComponent } from './components/catalogos-tab/catalogos-tab.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 
 export interface LugarOption {
@@ -20,6 +23,9 @@ export interface LugarOption {
     ReportesTabComponent,
     SalidasTabComponent,
     ProyectosTabComponent,
+    PersonalTabComponent,
+    FoliosTabComponent,
+    CatalogosTabComponent,
     ConfirmModalComponent,
   ],
   templateUrl: './dashboard.component.html',
@@ -31,8 +37,8 @@ export class DashboardComponent implements OnInit {
 
   user = this.authService.currentUser;
 
-  // Pestaña activa por defecto: 'salidas' primero, luego 'reportes' y al final 'proyectos'
-  activeTab = signal<'salidas' | 'reportes' | 'proyectos'>('salidas');
+  // Pestañas disponibles en orden
+  activeTab = signal<'salidas' | 'reportes' | 'proyectos' | 'personal' | 'folios' | 'catalogos'>('salidas');
 
   // Roles y Permisos
   isAdmin = computed(() => !!this.user()?.isAdmin);
@@ -81,7 +87,18 @@ export class DashboardComponent implements OnInit {
     this.authService.fetchProfile().subscribe();
   }
 
-  setTab(tab: 'salidas' | 'reportes' | 'proyectos'): void {
+  setTab(tab: 'salidas' | 'reportes' | 'proyectos' | 'personal' | 'folios' | 'catalogos'): void {
+    if ((tab === 'personal' || tab === 'folios' || tab === 'catalogos') && !this.isAdmin()) {
+      this.abrirModalConfirmacion({
+        titulo: 'Acceso Restringido',
+        mensaje: 'Solo los administradores tienen acceso a este apartado.',
+        botonTexto: 'Entendido',
+        botonClase: 'bg-slate-700 hover:bg-slate-600 text-white',
+        accion: () => {},
+      });
+      return;
+    }
+
     if (tab === 'proyectos' && !this.canAccessProyectos()) {
       this.abrirModalConfirmacion({
         titulo: 'Acceso Restringido',

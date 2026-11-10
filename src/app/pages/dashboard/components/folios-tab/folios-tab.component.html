@@ -1,0 +1,561 @@
+<div class="space-y-6 animate-fade-in">
+  <!-- Toast Notification -->
+  @if (toastMessage()) {
+    <div class="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl border border-emerald-500/40 bg-[#0d1624] px-4 py-3 text-sm font-semibold text-emerald-300 shadow-2xl shadow-emerald-500/20 backdrop-blur-md animate-bounce">
+      <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+      <span>{{ toastMessage() }}</span>
+    </div>
+  }
+
+  <!-- BANNER CORPORATIVO: FOLIOS MKT -->
+  <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-block rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 py-3 shadow-[0_4px_25px_rgba(227,6,19,0.4)]">
+          <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white uppercase flex items-center gap-2">
+            <span>FOLIO DE SOLICITUDES MKT</span>
+          </h1>
+        </div>
+        <p class="mt-2 text-xs sm:text-sm font-medium text-red-400 tracking-wide flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+          Diseño Gráfico / Audiovisual / 3D &middot; Total Ground
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          (click)="abrirCrearModal()"
+          class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+        >
+          <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+          <span>Nuevo Folio MKT</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Métricas Resumen -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Solicitudes MKT</p>
+        <p class="text-2xl font-black text-white mt-1">{{ totalFolios() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+        *
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Área Diseño</p>
+        <p class="text-2xl font-black text-emerald-400 mt-1">{{ foliosDiseno() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+        -
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Audiovisuales & 3D</p>
+        <p class="text-2xl font-black text-purple-400 mt-1">{{ foliosAudiovisuales() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-lg">
+        /
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLA DE SOLICITUDES MKT -->
+  <section class="rounded-2xl border border-white/10 bg-[#0c121d] shadow-2xl overflow-hidden">
+    <div class="p-4 sm:p-5 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0f1726]/60">
+      <div class="relative w-full sm:w-80">
+        <input
+          type="text"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          placeholder="Buscar folio, trabajo, solicitante, asignado..."
+          class="w-full rounded-xl border border-white/10 bg-slate-950/70 pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500/30"
+        />
+        <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <select
+          [ngModel]="filtroArea()"
+          (ngModelChange)="filtroArea.set($event)"
+          class="rounded-lg border border-white/10 bg-slate-950/80 px-3 py-2 text-xs text-white outline-none focus:border-red-500 cursor-pointer"
+        >
+          <option value="todos">Todas las Áreas</option>
+          <option value="diseño">Diseño</option>
+          <option value="audiovisuales">Audiovisuales</option>
+          <option value="3d">3D</option>
+        </select>
+
+        <button
+          (click)="cargarFolios()"
+          class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-xs font-medium text-slate-300 transition"
+          title="Recargar folios"
+        >
+          <svg class="w-3.5 h-3.5" [class.animate-spin]="loading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span>Actualizar</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-red-600 bg-red-600 text-white text-[11px] font-black uppercase tracking-wider">
+            <th class="px-5 py-3.5 w-36 text-center">NOMBRE</th>
+            <th class="px-6 py-3.5 min-w-[280px]">TRABAJO</th>
+            <th class="px-4 py-3.5 text-center w-20">FOLIO</th>
+            <th class="px-4 py-3.5 text-center w-20">FECHA</th>
+            <th class="px-5 py-3.5 w-40 text-center">ASIGNADO</th>
+            <th class="px-5 py-3.5 w-36 text-center">AREA</th>
+            <th class="px-4 py-3.5 text-center w-28">PRIORIDAD</th>
+            <th class="px-4 py-3.5 text-center w-20">ACCIONES</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5 text-xs">
+          @if (loading() && folios().length === 0) {
+            <tr>
+              <td colspan="8" class="text-center py-12 text-slate-500 animate-pulse">
+                Cargando folios de MKT...
+              </td>
+            </tr>
+          } @else if (filteredFolios().length === 0) {
+            <tr>
+              <td colspan="8" class="text-center py-12 text-slate-500">
+                No hay solicitudes de MKT registradas
+              </td>
+            </tr>
+          } @else {
+            @for (fol of filteredFolios(); track fol.id) {
+              <tr class="hover:bg-white/[0.03] transition-colors group">
+                <!-- 1. NOMBRE (Badge interactivo con selector exacto) -->
+                <td class="px-4 py-3 text-center whitespace-nowrap">
+                  <div class="relative inline-block">
+                    <select
+                      [ngModel]="fol.nombre"
+                      (ngModelChange)="actualizarCampoDirecto(fol, 'nombre', $event)"
+                      class="appearance-none px-3.5 py-1.5 pr-7 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer outline-none text-center"
+                      [ngClass]="getNombreBadgeClass(fol.nombre)"
+                    >
+                      @for (n of nombresDisponibles; track n.label) {
+                        <option [value]="n.label" class="bg-[#111722] text-white py-1">
+                          {{ n.label }}
+                        </option>
+                      }
+                    </select>
+                    <span class="pointer-events-none absolute right-2 top-2.5 text-[10px] opacity-75">▼</span>
+                  </div>
+                </td>
+
+                <!-- 2. TRABAJO -->
+                <td class="px-6 py-3 font-semibold text-white">
+                  <p class="text-xs sm:text-sm leading-snug break-words uppercase font-sans">
+                    {{ fol.trabajo }}
+                  </p>
+                </td>
+
+                <!-- 3. FOLIO -->
+                <td class="px-4 py-3 text-center font-mono font-bold text-slate-200 whitespace-nowrap">
+                  <span class="inline-block bg-slate-900/90 border border-white/10 px-2.5 py-1 rounded-lg text-xs">
+                    {{ fol.folio || '—' }}
+                  </span>
+                </td>
+
+                <!-- 4. FECHA -->
+                <td class="px-4 py-3 text-center font-mono text-slate-300 whitespace-nowrap">
+                  <span class="inline-block bg-slate-900/90 border border-white/10 px-2.5 py-1 rounded-lg text-xs font-bold">
+                    {{ fol.fecha || '—' }}
+                  </span>
+                </td>
+
+                <!-- 5. ASIGNADO (Badge interactivo con selector exacto) -->
+                <td class="px-4 py-3 text-center whitespace-nowrap">
+                  <div class="relative inline-block">
+                    <select
+                      [ngModel]="fol.asignado"
+                      (ngModelChange)="actualizarCampoDirecto(fol, 'asignado', $event)"
+                      class="appearance-none px-3.5 py-1.5 pr-7 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer outline-none text-center"
+                      [ngClass]="getAsignadoBadgeClass(fol.asignado)"
+                    >
+                      @for (a of asignadosDisponibles; track a.label) {
+                        <option [value]="a.label" class="bg-[#111722] text-white py-1">
+                          {{ a.label }}
+                        </option>
+                      }
+                    </select>
+                    <span class="pointer-events-none absolute right-2 top-2.5 text-[10px] opacity-75">▼</span>
+                  </div>
+                </td>
+
+                <!-- 6. AREA (Badge interactivo con selector exacto) -->
+                <td class="px-4 py-3 text-center whitespace-nowrap">
+                  <div class="relative inline-block">
+                    <select
+                      [ngModel]="fol.area"
+                      (ngModelChange)="actualizarCampoDirecto(fol, 'area', $event)"
+                      class="appearance-none px-3.5 py-1.5 pr-7 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer outline-none text-center"
+                      [ngClass]="getAreaBadgeClass(fol.area)"
+                    >
+                      @for (ar of areasDisponibles; track ar.label) {
+                        <option [value]="ar.label" class="bg-[#111722] text-white py-1">
+                          {{ ar.label }}
+                        </option>
+                      }
+                    </select>
+                    <span class="pointer-events-none absolute right-2 top-2.5 text-[10px] opacity-75">▼</span>
+                  </div>
+                </td>
+
+                <!-- 7. PRIORIDAD -->
+                <td class="px-4 py-3 text-center whitespace-nowrap text-xs font-medium text-slate-300">
+                  @if (fol.prioridad) {
+                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase">
+                      {{ fol.prioridad }}
+                    </span>
+                  } @else {
+                    <span class="text-slate-600">—</span>
+                  }
+                </td>
+
+                <!-- 8. ACCIONES -->
+                <td class="px-4 py-3 text-center whitespace-nowrap">
+                  <div class="flex items-center justify-center gap-1.5">
+                    <button
+                      (click)="abrirEditarModal(fol)"
+                      class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition cursor-pointer"
+                      title="Editar información del folio"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      </svg>
+                    </button>
+
+                    @if (isAdmin) {
+                      <button
+                        (click)="eliminarFolio(fol)"
+                        class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer"
+                        title="Eliminar folio (Solo Admin)"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-5 py-3 bg-[#0a0f19] border-t border-white/5 text-[11px] text-slate-500 flex items-center justify-between">
+      <span>Mostrando {{ filteredFolios().length }} folio(s)</span>
+      <span class="font-mono">TABLA: folios_mkt &middot; TOTAL GROUND</span>
+    </div>
+  </section>
+
+  <!-- MODAL: NUEVO FOLIO MKT -->
+  @if (showCreateModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              +
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Nuevo Folio MKT</h3>
+              <p class="text-xs text-slate-400">Registrar solicitud de Diseño / Audiovisual</p>
+            </div>
+          </div>
+          <button
+            (click)="cerrarCrearModal()"
+            class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        @if (createError()) {
+          <div class="mt-4 p-3 rounded-xl bg-red-950/50 border border-red-500/30 text-red-300 text-xs">
+            {{ createError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarNuevoFolio()" class="mt-4 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Selector Nombre -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre (Solicitante) *</label>
+              <select
+                name="newNombre"
+                [(ngModel)]="newFolio.nombre"
+                required
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                @for (n of nombresDisponibles; track n.label) {
+                  <option [value]="n.label">{{ n.label }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Folio -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Folio (Número)</label>
+              <input
+                type="text"
+                name="newFolioNum"
+                [(ngModel)]="newFolio.folio"
+                placeholder="Ej. 1150"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              />
+            </div>
+          </div>
+
+          <!-- Trabajo -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Descripción del Trabajo *</label>
+            <textarea
+              name="newTrabajo"
+              [(ngModel)]="newFolio.trabajo"
+              required
+              rows="3"
+              placeholder="Ej. DISEÑO PARA AGENDA SEL, INVITACION..."
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2 text-xs text-white outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Asignado -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Asignado a *</label>
+              <select
+                name="newAsignado"
+                [(ngModel)]="newFolio.asignado"
+                required
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                @for (a of asignadosDisponibles; track a.label) {
+                  <option [value]="a.label">{{ a.label }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Área -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Área *</label>
+              <select
+                name="newArea"
+                [(ngModel)]="newFolio.area"
+                required
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                @for (ar of areasDisponibles; track ar.label) {
+                  <option [value]="ar.label">{{ ar.label }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Fecha -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Fecha / Día</label>
+              <input
+                type="text"
+                name="newFecha"
+                [(ngModel)]="newFolio.fecha"
+                placeholder="Ej. 28"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              />
+            </div>
+          </div>
+
+          <!-- Prioridad -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Prioridad (Opcional)</label>
+            <input
+              type="text"
+              name="newPrioridad"
+              [(ngModel)]="newFolio.prioridad"
+              placeholder="Ej. Alta, Urgente, Normal..."
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div class="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              (click)="cerrarCrearModal()"
+              class="px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 text-xs font-semibold transition"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="createLoading()"
+              class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+            >
+              @if (createLoading()) {
+                <span class="animate-spin text-sm">⟳</span>
+              }
+              <span>Guardar Folio</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- MODAL: EDITAR FOLIO -->
+  @if (showEditModal() && selectedFolio(); as fol) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              ✏️
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Editar Folio MKT</h3>
+              <p class="text-xs text-slate-400">ID #{{ fol.id }} &middot; {{ fol.folio ? 'Folio ' + fol.folio : 'Sin folio' }}</p>
+            </div>
+          </div>
+          <button
+            (click)="cerrarEditarModal()"
+            class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        @if (editError()) {
+          <div class="mt-4 p-3 rounded-xl bg-red-950/50 border border-red-500/30 text-red-300 text-xs">
+            {{ editError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarEdicionFolio()" class="mt-4 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre (Solicitante)</label>
+              <select
+                name="editNombre"
+                [(ngModel)]="fol.nombre"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                @for (n of nombresDisponibles; track n.label) {
+                  <option [value]="n.label">{{ n.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Folio (Número)</label>
+              <input
+                type="text"
+                name="editFolioNum"
+                [(ngModel)]="fol.folio"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Descripción del Trabajo</label>
+            <textarea
+              name="editTrabajo"
+              [(ngModel)]="fol.trabajo"
+              rows="3"
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2 text-xs text-white outline-none focus:border-red-500"
+            ></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Asignado a</label>
+              <select
+                name="editAsignado"
+                [(ngModel)]="fol.asignado"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                @for (a of asignadosDisponibles; track a.label) {
+                  <option [value]="a.label">{{ a.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Área</label>
+              <select
+                name="editArea"
+                [(ngModel)]="fol.area"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                @for (ar of areasDisponibles; track ar.label) {
+                  <option [value]="ar.label">{{ ar.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Fecha / Día</label>
+              <input
+                type="text"
+                name="editFecha"
+                [(ngModel)]="fol.fecha"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Prioridad</label>
+            <input
+              type="text"
+              name="editPrioridad"
+              [(ngModel)]="fol.prioridad"
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div class="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              (click)="cerrarEditarModal()"
+              class="px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 text-xs font-semibold transition"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="editLoading()"
+              class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+            >
+              @if (editLoading()) {
+                <span class="animate-spin text-sm">⟳</span>
+              }
+              <span>Actualizar Folio</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

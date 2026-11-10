@@ -1,17 +1,16 @@
 <div class="min-h-screen bg-[#070b12] text-slate-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
   <!-- Top Header / Barra de Navegación Corporativa -->
   <header class="sticky top-0 z-40 border-b border-red-950/40 bg-[#0a0f18]/95 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
       <!-- LOGO TOTAL GROUND ESTILO CORPORATIVO -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2.5 shrink-0">
         <img
           src="/02-TG-Logo.png"
           alt="Total Ground"
           class="h-7 w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(227,6,19,0.5)]"
         />
         <div>
-         
           <p class="text-[10px] tracking-widest text-slate-400 font-semibold uppercase mt-0.5 leading-none">
             Bitácora 
           </p>
@@ -19,11 +18,11 @@
       </div>
 
       <!-- TABS PRINCIPALES DE NAVEGACIÓN -->
-      <div class="hidden md:flex items-center gap-2 p-1 rounded-xl bg-slate-950/80 border border-white/5">
+      <nav class="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/90 border border-white/5 overflow-x-auto max-w-full">
         <button
           type="button"
           (click)="setTab('salidas')"
-          class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
           [ngClass]="activeTab() === 'salidas' 
             ? 'bg-red-600 text-white shadow-lg shadow-red-600/25 scale-[1.02]' 
             : 'text-slate-400 hover:text-white hover:bg-white/5'"
@@ -34,7 +33,7 @@
         <button
           type="button"
           (click)="setTab('reportes')"
-          class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
           [ngClass]="activeTab() === 'reportes' 
             ? 'bg-red-600 text-white shadow-lg shadow-red-600/25 scale-[1.02]' 
             : 'text-slate-400 hover:text-white hover:bg-white/5'"
@@ -46,7 +45,7 @@
           <button
             type="button"
             (click)="setTab('proyectos')"
-            class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
             [ngClass]="activeTab() === 'proyectos' 
               ? 'bg-red-600 text-white shadow-lg shadow-red-600/25 scale-[1.02]' 
               : 'text-slate-400 hover:text-white hover:bg-white/5'"
@@ -54,10 +53,48 @@
             <span>PROYECTOS IT</span>
           </button>
         }
-      </div>
+
+        @if (isAdmin()) {
+          <!-- Separador sutil para módulos de Administrador -->
+          <span class="h-4 w-px bg-white/10 mx-1 shrink-0"></span>
+
+          <button
+            type="button"
+            (click)="setTab('personal')"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
+            [ngClass]="activeTab() === 'personal' 
+              ? 'bg-red-600 text-white shadow-lg shadow-red-600/25 scale-[1.02]' 
+              : 'text-slate-400 hover:text-white hover:bg-white/5'"
+          >
+            <span>PERSONAL</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="setTab('folios')"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
+            [ngClass]="activeTab() === 'folios' 
+              ? 'bg-red-600 text-white shadow-lg shadow-red-600/25 scale-[1.02]' 
+              : 'text-slate-400 hover:text-white hover:bg-white/5'"
+          >
+            <span>FOLIOS MKT</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="setTab('catalogos')"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
+            [ngClass]="activeTab() === 'catalogos' 
+              ? 'bg-red-600 text-white shadow-lg shadow-red-600/25 scale-[1.02]' 
+              : 'text-slate-400 hover:text-white hover:bg-white/5'"
+          >
+            <span>CATÁLOGOS</span>
+          </button>
+        }
+      </nav>
 
       <!-- PERFIL DE USUARIO & SALIR -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0">
         <div class="hidden sm:flex flex-col text-right">
           <span class="text-xs font-bold text-white">{{ user()?.nombre }}</span>
           <span class="text-[10px] text-slate-400 font-medium">
@@ -104,6 +141,29 @@
           Proyectos IT
         </button>
       }
+      @if (isAdmin()) {
+        <button
+          (click)="setTab('personal')"
+          class="flex-1 whitespace-nowrap py-1.5 px-3 rounded-lg text-xs font-bold text-center"
+          [ngClass]="activeTab() === 'personal' ? 'bg-red-600 text-white' : 'text-slate-400'"
+        >
+          Personal
+        </button>
+        <button
+          (click)="setTab('folios')"
+          class="flex-1 whitespace-nowrap py-1.5 px-3 rounded-lg text-xs font-bold text-center"
+          [ngClass]="activeTab() === 'folios' ? 'bg-red-600 text-white' : 'text-slate-400'"
+        >
+          Folios MKT
+        </button>
+        <button
+          (click)="setTab('catalogos')"
+          class="flex-1 whitespace-nowrap py-1.5 px-3 rounded-lg text-xs font-bold text-center"
+          [ngClass]="activeTab() === 'catalogos' ? 'bg-red-600 text-white' : 'text-slate-400'"
+        >
+          Catálogos
+        </button>
+      }
     </div>
   </header>
 
@@ -132,6 +192,27 @@
     <!-- Pestaña 3: Proyectos de IT -->
     @if (activeTab() === 'proyectos' && canAccessProyectos()) {
       <app-proyectos-tab
+        (requestConfirm)="abrirModalConfirmacion($event)"
+      />
+    }
+
+    <!-- Pestaña 4: Control de Personal (Solo Administrador) -->
+    @if (activeTab() === 'personal' && isAdmin()) {
+      <app-personal-tab />
+    }
+
+    <!-- Pestaña 5: Folios MKT (Solo Administrador) -->
+    @if (activeTab() === 'folios' && isAdmin()) {
+      <app-folios-tab
+        [isAdmin]="isAdmin()"
+        (requestConfirm)="abrirModalConfirmacion($event)"
+      />
+    }
+
+    <!-- Pestaña 6: Proyecto de Catálogos (Solo Administrador) -->
+    @if (activeTab() === 'catalogos' && isAdmin()) {
+      <app-catalogos-tab
+        [isAdmin]="isAdmin()"
         (requestConfirm)="abrirModalConfirmacion($event)"
       />
     }

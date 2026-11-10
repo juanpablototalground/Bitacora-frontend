@@ -1,0 +1,4 @@
+/* Estilos específicos de la pestaña Proyecto de Catálogos */
+:host {
+  display: block;
+}

@@ -7,7 +7,9 @@ html, body {
   color: #ffffff;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-
+button, select{
+  cursor: pointer;
+}
 /* Forzar cursor pointer e icono blanco en inputs de fecha y hora */
 input[type="date"],
 input[type="datetime-local"],

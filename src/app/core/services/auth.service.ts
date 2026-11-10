@@ -9,6 +9,7 @@ export interface User {
   correo: string;
   area: string;
   isAdmin: boolean;
+  activo?: boolean;
 }
 
 export interface RegisterPayload {

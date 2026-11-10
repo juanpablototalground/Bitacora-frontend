@@ -1,0 +1,4 @@
+/* Estilos específicos para la pestaña de Control de Personal */
+:host {
+  display: block;
+}

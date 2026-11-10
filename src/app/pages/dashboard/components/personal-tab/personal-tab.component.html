@@ -1,0 +1,512 @@
+<div class="space-y-6 animate-fade-in">
+  <!-- Toast Notification -->
+  @if (toastMessage()) {
+    <div class="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl border border-emerald-500/40 bg-[#0d1624] px-4 py-3 text-sm font-semibold text-emerald-300 shadow-2xl shadow-emerald-500/20 backdrop-blur-md animate-bounce">
+      <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+      <span>{{ toastMessage() }}</span>
+    </div>
+  }
+
+  <!-- BANNER CORPORATIVO: CONTROL DE PERSONAL -->
+  <section class="rounded-2xl border border-white/10 bg-gradient-to-r from-[#090e16] via-[#111722] to-[#090e16] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-red-600/15 blur-[60px] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-block rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 py-3 shadow-[0_4px_25px_rgba(227,6,19,0.4)]">
+          <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white uppercase flex items-center gap-2">
+            <span>CONTROL DE PERSONAL</span>
+          </h1>
+        </div>
+        <p class="mt-2 text-xs sm:text-sm font-medium text-red-400 tracking-wide flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+          Gestión de empleados, altas, edición de datos y bajas de acceso al sistema
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          (click)="abrirCrearModal()"
+          class="group flex items-center gap-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-5 py-3 text-sm font-bold shadow-lg shadow-red-600/25 transition-all duration-200 active:scale-95 cursor-pointer"
+        >
+          <span class="text-lg leading-none font-light group-hover:rotate-90 transition-transform duration-200">+</span>
+          <span>Añadir Empleado</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Métricas Resumen -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Plantilla</p>
+        <p class="text-2xl font-black text-white mt-1">{{ totalPersonal() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg font-bold">
+        👥
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Personal Activo</p>
+        <p class="text-2xl font-black text-emerald-400 mt-1">{{ personalActivo() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
+        ✓
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-white/5 bg-[#111722]/80 backdrop-blur p-4 flex items-center justify-between shadow-sm">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Bajas / Inactivos</p>
+        <p class="text-2xl font-black text-rose-400 mt-1">{{ personalInactivo() }}</p>
+      </div>
+      <div class="h-10 w-10 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 text-lg">
+        ✕
+      </div>
+    </div>
+  </section>
+
+  <!-- Filtros & Buscador -->
+  <section class="rounded-2xl border border-white/10 bg-[#0c121d] p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="relative w-full sm:w-80">
+      <input
+        type="text"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        placeholder="Buscar por nombre, correo, área..."
+        class="w-full rounded-xl border border-white/10 bg-slate-950/70 pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500/30"
+      />
+      <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </div>
+
+    <div class="flex items-center gap-2 w-full sm:w-auto">
+      <div class="flex items-center p-1 rounded-xl bg-slate-950/80 border border-white/5 text-xs font-semibold">
+        <button
+          type="button"
+          (click)="filtroEstado.set('todos')"
+          class="px-3 py-1.5 rounded-lg transition"
+          [ngClass]="filtroEstado() === 'todos' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'"
+        >
+          Todos
+        </button>
+        <button
+          type="button"
+          (click)="filtroEstado.set('activos')"
+          class="px-3 py-1.5 rounded-lg transition"
+          [ngClass]="filtroEstado() === 'activos' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'"
+        >
+          Activos
+        </button>
+        <button
+          type="button"
+          (click)="filtroEstado.set('inactivos')"
+          class="px-3 py-1.5 rounded-lg transition"
+          [ngClass]="filtroEstado() === 'inactivos' ? 'bg-rose-600 text-white' : 'text-slate-400 hover:text-white'"
+        >
+          Inactivos
+        </button>
+      </div>
+
+      <button
+        (click)="cargarUsuarios()"
+        class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-xs font-medium text-slate-300 transition"
+        title="Recargar usuarios"
+      >
+        <svg class="w-3.5 h-3.5" [class.animate-spin]="loading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- GRID DE TARJETAS (CARDS) DE EMPLEADOS -->
+  <section>
+    @if (loading() && usuarios().length === 0) {
+      <div class="text-center py-16 text-slate-500 animate-pulse">
+        Cargando plantilla de empleados...
+      </div>
+    } @else if (filteredUsuarios().length === 0) {
+      <div class="text-center py-16 text-slate-500 rounded-2xl border border-white/5 bg-[#0c121d]">
+        <p class="text-base font-semibold text-slate-400">No se encontraron empleados</p>
+        <p class="text-xs text-slate-600 mt-1">Prueba con otro término de búsqueda o cambia el filtro de estado.</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (emp of filteredUsuarios(); track emp.id; let idx = $index) {
+          <div
+            draggable="true"
+            (dragstart)="onDragStart($event, idx)"
+            (dragover)="onDragOver($event, idx)"
+            (dragleave)="onDragLeave(idx)"
+            (drop)="onDrop($event, idx)"
+            (dragend)="onDragEnd()"
+            (click)="abrirDetalle(emp)"
+            class="group relative rounded-2xl border bg-[#0f1726] p-5 shadow-xl transition-all duration-200 cursor-grab active:cursor-grabbing overflow-hidden transform"
+            [ngClass]="{
+              'border-red-500/50 bg-[#131d2e] -translate-y-1': dragOverIndex() === idx,
+              'opacity-40 scale-95 border-dashed border-red-500': draggedIndex() === idx,
+              'border-white/10 hover:border-red-500/50 hover:bg-[#131d2e] hover:-translate-y-1': draggedIndex() !== idx && dragOverIndex() !== idx
+            }"
+          >
+            <!-- Handle visual de arrastre -->
+            <div class="absolute top-4 left-4 text-slate-600 group-hover:text-slate-400 transition flex items-center gap-0.5 cursor-grab">
+              <span class="text-xs">⠿</span>
+            </div>
+
+            <!-- Indicador activo/inactivo en esquina superior -->
+            <div class="absolute top-4 right-4 flex items-center gap-2">
+              @if (emp.activo !== false) {
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                  ACTIVO
+                </span>
+              } @else {
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                  <span class="h-1.5 w-1.5 rounded-full bg-rose-400"></span>
+                  DADO DE BAJA
+                </span>
+              }
+            </div>
+
+            <!-- Avatar + Info General -->
+            <div class="flex items-center gap-4">
+              <div
+                class="h-14 w-14 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg border"
+                [ngClass]="emp.activo !== false 
+                  ? 'bg-gradient-to-br from-red-600 to-red-800 text-white border-red-500/30 shadow-red-600/20' 
+                  : 'bg-slate-800 text-slate-400 border-white/10'"
+              >
+                {{ (emp.nombre || 'U').charAt(0).toUpperCase() }}
+              </div>
+              <div class="flex-1 pr-14">
+                <h3 class="text-base font-bold text-white group-hover:text-red-400 transition leading-snug line-clamp-1">
+                  {{ emp.nombre }}
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5 line-clamp-1 font-medium">{{ emp.area }}</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <span class="inline-block text-[11px] px-2 py-0.5 rounded-md font-mono bg-slate-900 text-slate-300 border border-white/10">
+                    ID #{{ emp.id }}
+                  </span>
+                  @if (emp.isAdmin) {
+                    <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      ADMIN
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Correo y Pie de Tarjeta -->
+            <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+              <span class="truncate max-w-[200px]" [title]="emp.correo">{{ emp.correo }}</span>
+              <span class="text-red-400 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1 text-[11px]">
+                <span>Detalles</span>
+                <span>&rarr;</span>
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- MODAL: DETALLE / EDITAR / DAR DE BAJA EMPLEADO -->
+  @if (showDetailModal() && selectedUser(); as user) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        <!-- Encabezado Modal -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              👤
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">{{ user.nombre }}</h3>
+              <p class="text-xs text-slate-400">Ficha del colaborador &middot; ID #{{ user.id }}</p>
+            </div>
+          </div>
+          <button
+            (click)="cerrarDetalleModal()"
+            class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Estado actual de la cuenta -->
+        <div class="mt-4 p-3 rounded-xl border flex items-center justify-between"
+             [ngClass]="user.activo !== false ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-rose-500/10 border-rose-500/20 text-rose-300'">
+          <div class="flex items-center gap-2">
+            <span class="h-2.5 w-2.5 rounded-full" [ngClass]="user.activo !== false ? 'bg-emerald-400' : 'bg-rose-400'"></span>
+            <span class="text-xs font-bold uppercase">
+              Estado: {{ user.activo !== false ? 'Activo en el Sistema' : 'Dado de Baja (Sin Acceso al Portal)' }}
+            </span>
+          </div>
+          <button
+            type="button"
+            (click)="toggleActivoEmpleado()"
+            [disabled]="editLoading()"
+            class="text-[11px] font-bold px-3 py-1 rounded-lg border transition"
+            [ngClass]="user.activo !== false 
+              ? 'border-rose-500/40 bg-rose-500/20 text-rose-300 hover:bg-rose-500/30' 
+              : 'border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'"
+          >
+            {{ user.activo !== false ? 'Desactivar Cuenta' : 'Reactivar Cuenta' }}
+          </button>
+        </div>
+
+        <!-- Feedback Messages -->
+        @if (editError()) {
+          <div class="mt-4 p-3 rounded-xl bg-red-950/50 border border-red-500/30 text-red-300 text-xs">
+            {{ editError() }}
+          </div>
+        }
+        @if (editSuccess()) {
+          <div class="mt-4 p-3 rounded-xl bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs">
+            {{ editSuccess() }}
+          </div>
+        }
+
+        <!-- Formulario de Edición -->
+        <form (ngSubmit)="guardarCambiosEmpleado()" class="mt-4 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre Completo *</label>
+            <input
+              type="text"
+              name="nombre"
+              [(ngModel)]="editEmployee.nombre"
+              required
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico *</label>
+            <input
+              type="email"
+              name="correo"
+              [(ngModel)]="editEmployee.correo"
+              required
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Área / Departamento *</label>
+              <input
+                type="text"
+                name="area"
+                [(ngModel)]="editEmployee.area"
+                list="areasList"
+                required
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              />
+              <datalist id="areasList">
+                @for (a of areasPredefinidas; track a) {
+                  <option [value]="a"></option>
+                }
+              </datalist>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Rol en Sistema</label>
+              <select
+                name="isAdmin"
+                [(ngModel)]="editEmployee.isAdmin"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                <option [ngValue]="false">Colaborador Estándar</option>
+                <option [ngValue]="true">Administrador Global</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">
+              Nueva Contraseña <span class="text-slate-500 font-normal">(Opcional, dejar en blanco para no cambiarla)</span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              [(ngModel)]="editPassword"
+              placeholder="••••••••"
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+            />
+          </div>
+
+          <!-- AVISO DE PRESERVACIÓN DE HISTORIAL -->
+          <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 text-[11px] text-slate-400">
+            🛡️ <strong class="text-slate-300">Preservación Histórica:</strong> Al dar de baja a un empleado no se pierden sus reportes diarios ni sus registros de salidas. Quedarán siempre vinculados y auditables en el sistema.
+          </div>
+
+          <!-- BOTONES DE ACCIÓN: ACTUALIZAR Y ELIMINAR/DAR DE BAJA -->
+          <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <button
+              type="button"
+              (click)="darDeBajaEmpleado()"
+              [disabled]="editLoading() || user.activo === false"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-rose-500/40 bg-rose-950/30 text-rose-300 hover:bg-rose-900/50 text-xs font-bold transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+              title="Dar de baja para impedir que ingrese al sistema sin borrar su historial"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              <span>Dar de Baja</span>
+            </button>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <button
+                type="button"
+                (click)="cerrarDetalleModal()"
+                class="px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 text-xs font-semibold transition"
+              >
+                Cerrar
+              </button>
+
+              <button
+                type="submit"
+                [disabled]="editLoading()"
+                class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+              >
+                @if (editLoading()) {
+                  <span class="animate-spin text-sm">⟳</span>
+                }
+                <span>Actualizar Datos</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- MODAL: AÑADIR NUEVO EMPLEADO -->
+  @if (showCreateModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div class="relative w-full max-w-lg rounded-2xl border border-slate-700/80 bg-[#111722] p-6 sm:p-8 shadow-[0_0_60px_rgba(227,6,19,.25)]">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-lg">
+              +
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Añadir Nuevo Empleado</h3>
+              <p class="text-xs text-slate-400">Crear cuenta de acceso para la Bitácora</p>
+            </div>
+          </div>
+          <button
+            (click)="cerrarCrearModal()"
+            class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        @if (createError()) {
+          <div class="mt-4 p-3 rounded-xl bg-red-950/50 border border-red-500/30 text-red-300 text-xs">
+            {{ createError() }}
+          </div>
+        }
+
+        <form (ngSubmit)="guardarNuevoEmpleado()" class="mt-4 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre Completo *</label>
+            <input
+              type="text"
+              name="newNombre"
+              [(ngModel)]="newEmployee.nombre"
+              required
+              placeholder="Ej. Juan Pérez"
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico *</label>
+            <input
+              type="email"
+              name="newCorreo"
+              [(ngModel)]="newEmployee.correo"
+              required
+              placeholder="usuario@totalground.com"
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Contraseña Inicial *</label>
+            <input
+              type="password"
+              name="newContrasena"
+              [(ngModel)]="newEmployee.contrasena"
+              required
+              placeholder="Mínimo 6 caracteres"
+              class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Área / Departamento *</label>
+              <input
+                type="text"
+                name="newArea"
+                [(ngModel)]="newEmployee.area"
+                list="areasListNew"
+                required
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              />
+              <datalist id="areasListNew">
+                @for (a of areasPredefinidas; track a) {
+                  <option [value]="a"></option>
+                }
+              </datalist>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Rol</label>
+              <select
+                name="newIsAdmin"
+                [(ngModel)]="newEmployee.isAdmin"
+                class="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-xs text-white outline-none focus:border-red-500"
+              >
+                <option [ngValue]="false">Colaborador Estándar</option>
+                <option [ngValue]="true">Administrador Global</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              (click)="cerrarCrearModal()"
+              class="px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 text-xs font-semibold transition"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="createLoading()"
+              class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 transition disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+            >
+              @if (createLoading()) {
+                <span class="animate-spin text-sm">⟳</span>
+              }
+              <span>Registrar Empleado</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

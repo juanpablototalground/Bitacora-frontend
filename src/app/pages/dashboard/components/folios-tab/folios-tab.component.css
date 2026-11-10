@@ -1,0 +1,4 @@
+/* Estilos específicos de la pestaña Folios MKT */
+:host {
+  display: block;
+}
